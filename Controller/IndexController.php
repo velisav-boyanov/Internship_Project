@@ -3,6 +3,7 @@
 namespace Controller;
 
 use Model\Services\IndexService;
+use Core\View;
 
 class IndexController
 {
@@ -20,8 +21,9 @@ class IndexController
 
     public function home()
     {
-        var_dump('IndexController');
-        $service = new IndexService();
-        $service->home();
+        View::render('main');
+        //var_dump('IndexController');
+        //$service = new IndexService();
+        //$service->home();
     }
 }

@@ -8,6 +8,32 @@
     <title>Document</title>
 </head>
 <body>
-<h1>YEEEEE</h1>
+
+<div class = "container">
+    <div class = "row">
+        <div class = "row">
+        <div class="col-md-6">
+            <h2> Enter field parameters to start game.</h2>
+            <form action="index.php?target=field&action=add" method="post">
+                <div class="form-group">
+                    <label>Width:</label>
+                    <input type="text" name = "Width" class="form-control" required>
+                <div class="form-group">
+                    <label>Length:</label>
+                    <input type="text" name = "Length" class="form-control" required>
+                <div class="form-group">
+                    <label>End X:</label>
+                    <input type="text" name = "End_X" class="form-control" required>
+                <div class="form-group">
+                    <label>End Y:</label>
+                    <input type="text" name = "End_Y" class="form-control" required>
+                <div class="form-group">
+                    <label>Bombs:</label>
+                    <input type="text" name = "Bomb_Intensity" class="form-control" required>
+                    <button type="submit" class="btn btn-primary"> Start </button>
+            </form>
+        </div>
+    </div>
+
 </body>
 </html>

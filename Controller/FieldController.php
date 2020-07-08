@@ -3,6 +3,7 @@
 namespace Controller;
 
 USE Model\Services\FieldService;
+USE Core\View;
 
 class FieldController
 {
@@ -36,6 +37,8 @@ class FieldController
         $result = $service->saveField($Length, $Width, $Bomb_Intensity, $End_X, $End_Y);
 
         echo json_encode($result, JSON_PRETTY_PRINT);
+
+        View::render('field');
     }
 
     public function getById()
