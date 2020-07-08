@@ -20,11 +20,18 @@ class PlayerService
             'Health' => $Health
         ];
 
+        $playerId = $repo->savePlayer($playerToInsert);
         if($repo->savePlayer($playerToInsert))
         {
             $result['success'] = true;
             $result['msg'] = 'Player successfully added!';
         }
+        //COOKIE
+        $cookie_name = 'MyPlayerId';
+        var_dump($playerId);
+        $date = time() + (60*60*24*7*2);
+        setcookie($cookie_name, $playerId, $date);
+
         return $result;
     }
 

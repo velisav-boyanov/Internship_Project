@@ -2,37 +2,36 @@
 
 
 namespace Controller;
-use Model\Services\PlayerService;
 use Core\View;
+use Model\Services\SlotService;
 
-class PlayerController
+class SlotController
 {
     public function add()
     {
         $result = [
             'success' => false
         ];
-        $baseYAxis = 1;
         $X = $_POST['X'] ?? '';
-        $Y = $baseYAxis ?? '';
-        $Health = $_POST['Health'] ?? '';
+        $Y = $_POST['Y'] ?? '';
+        $Damage = $_POST['Damage'] ?? '';
         $Field_Id = $_COOKIE['MyFieldId'] ?? '';
 
         if(
             !$this->validateSize($X)
             || !$this->validateSize($Y)
-            || !$this->validateSize($Health)
+            || !$this->validateSize($Damage)
             || !$this->validateSize($Field_Id)
         )
         {
-            $result['msg'] = 'Invalid player parameters';
+            $result['msg'] = 'Invalid slot parameters';
 
             echo json_encode($result, JSON_PRETTY_PRINT);
             return $result;
         }
 
-        $service = new PlayerService();
-        $result = $service->savePlayer($X, $Y, $Field_Id, $Health);
+        $service = new SlotService();
+        $result = $service->saveSlot($X, $Y, $Field_Id, $Damage);
 
         echo json_encode($result, JSON_PRETTY_PRINT);
 
@@ -45,24 +44,24 @@ class PlayerController
             'success' => false
         ];
 
-        $playerId = $_POST['playerId'] ?? '0';
+        $slotId = $_POST['slotId'] ?? '0';
 
-        if (!$this->validateSize($playerId)) {
-            $result['msg'] = 'Invalid player id';
+        if (!$this->validateSize($slotId)) {
+            $result['msg'] = 'Invalid slot id';
             echo json_encode($result, JSON_PRETTY_PRINT);
             return $result;
         }
 
-        $service = new PlayerService();
-        $result = $service->getPlayer($playerId);
+        $service = new SlotService();
+        $result = $service->getSlot($slotId);
 
         echo json_encode($result, JSON_PRETTY_PRINT);
     }
 
     public function getAll()
     {
-        $service = new PlayerService();
-        $result = $service->getAllPlayers();
+        $service = new SlotService();
+        $result = $service->getAllSlots();
 
         echo json_encode($result, JSON_PRETTY_PRINT);
     }
@@ -70,5 +69,4 @@ class PlayerController
     private function validateSize($size){
         return $size > 0;
     }
-
 }

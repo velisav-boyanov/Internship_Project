@@ -2,37 +2,33 @@
 
 
 namespace Controller;
-use Model\Services\PlayerService;
+use Model\Service\ItemService;
 use Core\View;
 
-class PlayerController
+class ItemController
 {
     public function add()
     {
         $result = [
             'success' => false
         ];
-        $baseYAxis = 1;
-        $X = $_POST['X'] ?? '';
-        $Y = $baseYAxis ?? '';
-        $Health = $_POST['Health'] ?? '';
+        $Name = $_POST['Name'] ?? '';
+        $Player_Id = $_COOKIE['MyPlayerId'] ?? '';
         $Field_Id = $_COOKIE['MyFieldId'] ?? '';
 
         if(
-            !$this->validateSize($X)
-            || !$this->validateSize($Y)
-            || !$this->validateSize($Health)
+            !$this->validateSize($Player_Id)
             || !$this->validateSize($Field_Id)
         )
         {
-            $result['msg'] = 'Invalid player parameters';
+            $result['msg'] = 'Invalid item parameters';
 
             echo json_encode($result, JSON_PRETTY_PRINT);
             return $result;
         }
 
-        $service = new PlayerService();
-        $result = $service->savePlayer($X, $Y, $Field_Id, $Health);
+        $service = new ItemController();
+        $result = $service->saveItem($Name, $Field_Id, $Player_Id);
 
         echo json_encode($result, JSON_PRETTY_PRINT);
 
@@ -45,24 +41,24 @@ class PlayerController
             'success' => false
         ];
 
-        $playerId = $_POST['playerId'] ?? '0';
+        $itemId = $_POST['itemId'] ?? '0';
 
-        if (!$this->validateSize($playerId)) {
-            $result['msg'] = 'Invalid player id';
+        if (!$this->validateSize($itemId)) {
+            $result['msg'] = 'Invalid item id';
             echo json_encode($result, JSON_PRETTY_PRINT);
             return $result;
         }
 
-        $service = new PlayerService();
-        $result = $service->getPlayer($playerId);
+        $service = new ItemService();
+        $result = $service->getItem($itemId);
 
         echo json_encode($result, JSON_PRETTY_PRINT);
     }
 
     public function getAll()
     {
-        $service = new PlayerService();
-        $result = $service->getAllPlayers();
+        $service = new ItemService();
+        $result = $service->getAllItems();
 
         echo json_encode($result, JSON_PRETTY_PRINT);
     }
@@ -70,5 +66,4 @@ class PlayerController
     private function validateSize($size){
         return $size > 0;
     }
-
 }

@@ -2,37 +2,36 @@
 
 namespace Model\Repository;
 
-class PlayerRepository
+class SlotRepository
 {
-    public function savePlayer($PlayerToInsert)
+    public function saveSlot($SlotToInsert)
     {
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'INSERT INTO `Player` (`X`, `Y`, `Field_Id`, `Health`)
-               VALUES (:X, :Y, :Field_Id, :Health)';
+        $sql = 'INSERT INTO `Slot` (`X`, `Y`, `Field_Id`, `Damage`)
+               VALUES (:X, :Y, :Field_Id, :Damage)';
 
         $stmt = $pdo->prepare($sql);
-        $stmt->execute($PlayerToInsert);
-        return $pdo->lastInsertId();
+        return $stmt->execute($SlotToInsert);
     }
 
-    public function getPlayerById($playerId)
+    public function getSlotById($slotId)
     {
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'SELECT * FROM `Player` WHERE `Player_Id` = :Player_Id';
+        $sql = 'SELECT * FROM `Slot` WHERE `Slot_Id` = :Slot_Id';
 
         $stmt = $pdo->prepare($sql);
-        $stmt->execute(['playerId' => $playerId,]);
+        $stmt->execute(['slotId' => $slotId,]);
 
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
         return $result;
     }
 
-    public function getAllPlayers(){
+    public function getAllSlots(){
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'SELECT * FROM `Player`';
+        $sql = 'SELECT * FROM `Slot`';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
@@ -40,5 +39,4 @@ class PlayerRepository
         $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $result;
     }
-
 }

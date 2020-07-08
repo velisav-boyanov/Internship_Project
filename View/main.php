@@ -9,7 +9,7 @@
 </head>
 <body>
 
-<h2> Enter field parameters to start game.</h2>
+<h2> Enter field parameters.</h2>
 <form action="index.php?target=field&action=add" method="post">
                 <div class="form-group">
                     <label>Width:</label>

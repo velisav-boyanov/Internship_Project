@@ -2,37 +2,37 @@
 
 namespace Model\Repository;
 
-class PlayerRepository
+
+class ItemRepository
 {
-    public function savePlayer($PlayerToInsert)
+    public function saveItem($ItemToInsert)
     {
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'INSERT INTO `Player` (`X`, `Y`, `Field_Id`, `Health`)
-               VALUES (:X, :Y, :Field_Id, :Health)';
+        $sql = 'INSERT INTO `Item` (`Name`, `Player_id`, `Field_Id`)
+               VALUES (:Name, :Player_Id, :Field_Id)';
 
         $stmt = $pdo->prepare($sql);
-        $stmt->execute($PlayerToInsert);
-        return $pdo->lastInsertId();
+        return $stmt->execute($ItemToInsert);
     }
 
-    public function getPlayerById($playerId)
+    public function getItemById($itemId)
     {
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'SELECT * FROM `Player` WHERE `Player_Id` = :Player_Id';
+        $sql = 'SELECT * FROM `Item` WHERE `Item_Id` = :Item_Id';
 
         $stmt = $pdo->prepare($sql);
-        $stmt->execute(['playerId' => $playerId,]);
+        $stmt->execute(['itemId' => $itemId,]);
 
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
         return $result;
     }
 
-    public function getAllPlayers(){
+    public function getAllItems(){
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'SELECT * FROM `Player`';
+        $sql = 'SELECT * FROM `Item`';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
@@ -40,5 +40,4 @@ class PlayerRepository
         $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $result;
     }
-
 }
