@@ -22,7 +22,7 @@ class SlotController
         if(
             !$this->validateSize($X)
             || !$this->validateSize($Y)
-            || !$this->validateSize($Damage)
+            || !$this->validateDamage($Damage)
             || !$this->validateSize($Field_Id)
         )
         {
@@ -70,5 +70,9 @@ class SlotController
 
     private function validateSize($size){
         return $size > self::MinSize;
+    }
+
+    private function validateDamage($size){
+        return $size >= self::MinSize;
     }
 }

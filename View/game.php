@@ -1,7 +1,6 @@
 <?php echo "<br>" ?>
 
 <?php
-
 use Controller\FieldController;
 use Controller\SlotController;
 
@@ -18,7 +17,7 @@ for($i = 1; $i <= $field_x; $i++) {
     {
         echo "<br>" . "Loading...";
 
-        //no bombs on the first row, because the user spawns there.
+        //No bombs on the first row, because the user spawns there.
         if($i == 1) {
             $bomb = 0;
         }elseif($i > 1){
@@ -32,9 +31,22 @@ for($i = 1; $i <= $field_x; $i++) {
 echo "<br>" . "Finished" . "<br>";
 
 
-
+//Sets damage for field slot.
 function isBomb($percentage){
-    return 1;
+    $random = mt_rand(1, 100) / 100;
+
+    $result = 0;
+
+    if($random <= $percentage){
+        $result = 1;
+    }
+    if($random <= ($percentage*2)/3){
+        $result = 2;
+    }
+    if($random <= $percentage/3){
+        $result = 3;
+    }
+    return $result;
 }
 ?>
 

@@ -26,7 +26,6 @@
                 <div class="form-group">
                     <label>Bombs(Max < 1):</label>
                     <input type="text" name = "Bomb_Intensity" class="form-control" required>
-                <div class="form-group"
                     <button type="submit" class="btn btn-primary"> Start </button>
                 </div>
             </form>
