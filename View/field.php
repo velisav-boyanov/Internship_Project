@@ -18,6 +18,7 @@
         <input type="text" name = "X" class="form-control" required>
     <div class="form-group">
     <button type="submit" class="btn btn-primary"> Start </button>
+    </div>
 </form>
 </body>
 </html>

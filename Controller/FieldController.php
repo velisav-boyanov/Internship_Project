@@ -7,6 +7,10 @@ USE Core\View;
 
 class FieldController
 {
+    const MaxSizeForField = 8;
+    const MinSize = 0;
+    const MaxBombIntensity = 1;
+
     public function add()
     {
         $result = [
@@ -24,7 +28,7 @@ class FieldController
             || !$this->validateSize($Width)
             || !$this->validatePosition($End_Y, $Length)
             || !$this->validatePosition($End_X, $Width)
-            || !$this->validateFloat($Bomb_Intensity)
+            || !$this->validateBombIntensity($Bomb_Intensity)
         )
         {
             $result['msg'] = 'Invalid field parameters';
@@ -75,14 +79,14 @@ class FieldController
     }
 
     private function validateSize($size){
-        return ($size > 0 && $size <= 8);
+        return ($size > self::MinSize && $size <= self::MaxSizeForField);
     }
 
     private function validatePosition($number, $size){
         return $number <= $size;
     }
 
-    private function validateFloat($float){
-        return ($float > 0 && $float < 1);
+    private function validateBombIntensity($bombIntensity){
+        return ($bombIntensity > self::MinSize && $bombIntensity < self::MaxBombIntensity);
     }
 }

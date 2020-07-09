@@ -7,6 +7,8 @@ use Model\Services\SlotService;
 
 class SlotController
 {
+    const MinSize = 0;
+
     public function add($X, $Y, $Damage)
     {
         $result = [
@@ -67,6 +69,6 @@ class SlotController
     }
 
     private function validateSize($size){
-        return $size > 0;
+        return $size > self::MinSize;
     }
 }
