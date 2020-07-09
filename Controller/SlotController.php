@@ -7,14 +7,14 @@ use Model\Services\SlotService;
 
 class SlotController
 {
-    public function add()
+    public function add($X, $Y, $Damage)
     {
         $result = [
             'success' => false
         ];
-        $X = $_POST['X'] ?? '';
-        $Y = $_POST['Y'] ?? '';
-        $Damage = $_POST['Damage'] ?? '';
+        //$X = $_POST['X'] ?? '';
+        //$Y = $_POST['Y'] ?? '';
+        //$Damage = 1;
         $Field_Id = $_COOKIE['MyFieldId'] ?? '';
 
         if(
@@ -35,7 +35,7 @@ class SlotController
 
         echo json_encode($result, JSON_PRETTY_PRINT);
 
-        View::render('game');
+        //View::render('game');
     }
 
     public function getById()
