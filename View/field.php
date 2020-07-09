@@ -11,7 +11,7 @@
 <h1>Enter user parameters.</h1>
 <form action="index.php?target=player&action=add" method="post">
     <div class="form-group">
-        <label>Health:</label>
+        <label>Health(Max 4):</label>
         <input type="text" name = "Health" class="form-control" required>
     <div class="form-group">
         <label>Starting X:</label>

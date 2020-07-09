@@ -20,8 +20,8 @@ class PlayerService
             'Health' => $Health
         ];
 
-        $playerId = $repo->savePlayer($playerToInsert);
-        if($repo->savePlayer($playerToInsert))
+        //$playerId = $repo->savePlayer($playerToInsert);
+        if($playerId = $repo->savePlayer($playerToInsert))
         {
             $result['success'] = true;
             $result['msg'] = 'Player successfully added!';

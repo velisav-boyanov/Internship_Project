@@ -19,8 +19,8 @@ class FieldService
             'End_X' => $End_X,
             'End_Y' => $End_Y
         ];
-        $fieldId = $repo->saveField($fieldToInsert);
-        if($repo->saveField($fieldToInsert))
+        //$fieldId = $repo->saveField($fieldToInsert);
+        if($fieldId = $repo->saveField($fieldToInsert))
         {
             $result['success'] = true;
             $result['msg'] = 'Field successfully added!';
