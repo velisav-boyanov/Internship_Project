@@ -18,7 +18,12 @@ for($i = 1; $i <= $field_x; $i++) {
     {
         echo "<br>" . "Loading...";
 
-        $bomb = isBomb($field_bomb_chance);
+        //no bombs on the first row, because the user spawns there.
+        if($i == 1) {
+            $bomb = 0;
+        }elseif($i > 1){
+            $bomb = isBomb($field_bomb_chance);
+        }
 
         $slot = new SlotController();
         $slot->add($i, $k, $bomb);
