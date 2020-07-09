@@ -34,22 +34,22 @@ class FieldController
         }
 
         $service = new FieldService();
-        $result = $service->saveField($Length, $Width, $Bomb_Intensity, $End_X, $End_Y);
+        $result = $service->saveField($Width, $Length, $Bomb_Intensity, $End_X, $End_Y);
 
         echo json_encode($result, JSON_PRETTY_PRINT);
 
         View::render('field');
     }
 
-    public function getById()
+    public function getById($fieldId)
     {
         $result = [
             'success' => false
         ];
 
-        $fieldId = $_POST['fieldId'] ?? '0';
+        //$fieldId = $_POST['fieldId'] ?? '0';
 
-        if (!$this->validateSize($fieldId)) {
+        if (!$this->validateNumber($fieldId)) {
             $result['msg'] = 'Invalid field id';
             echo json_encode($result, JSON_PRETTY_PRINT);
             return $result;
@@ -59,6 +59,7 @@ class FieldController
         $result = $service->getField($fieldId);
 
         echo json_encode($result, JSON_PRETTY_PRINT);
+        return $result;
     }
 
     public function getAll()
@@ -69,8 +70,12 @@ class FieldController
         echo json_encode($result, JSON_PRETTY_PRINT);
     }
 
+    private function validateNumber($number){
+        return $number > 0;
+    }
+
     private function validateSize($size){
-        return $size > 0;
+        return ($size > 0 && $size <= 8);
     }
 
     private function validatePosition($number, $size){
@@ -78,6 +83,6 @@ class FieldController
     }
 
     private function validateFloat($float){
-        return $float > 0;
+        return ($float > 0 && $float < 1);
     }
 }
