@@ -41,16 +41,16 @@ class PlayerController
         echo "<br>";
         echo json_encode($result, JSON_PRETTY_PRINT);
 
-        View::render('game');
+        View::render('game_setup');
     }
 
-    public function getById()
+    public function getById($playerId)
     {
         $result = [
             'success' => false
         ];
 
-        $playerId = $_POST['playerId'] ?? '0';
+        //$playerId = $_POST['playerId'] ?? '0';
 
         if (!$this->validateSize($playerId)) {
             $result['msg'] = 'Invalid player id';
@@ -62,6 +62,7 @@ class PlayerController
         $result = $service->getPlayer($playerId);
 
         echo json_encode($result, JSON_PRETTY_PRINT);
+        return $result;
     }
 
     public function getAll()

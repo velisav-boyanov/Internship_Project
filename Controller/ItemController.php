@@ -34,7 +34,7 @@ class ItemController
 
         echo json_encode($result, JSON_PRETTY_PRINT);
 
-        View::render('game');
+        //View::render('game_setup');
     }
 
     public function getById()

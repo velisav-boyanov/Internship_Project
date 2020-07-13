@@ -20,10 +20,10 @@ class PlayerRepository
     {
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'SELECT * FROM `Player` WHERE `Player_Id` = :Player_Id';
+        $sql = 'SELECT * FROM `Player` WHERE `Player_Id` = :playerId';
 
         $stmt = $pdo->prepare($sql);
-        $stmt->execute(['playerId' => $playerId,]);
+        $stmt->execute(['playerId' => $playerId]);
 
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
         return $result;
