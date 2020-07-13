@@ -73,24 +73,6 @@ class PlayerController
         echo json_encode($result, JSON_PRETTY_PRINT);
     }
 
-    private function validateSize($size){
-        return $size > self::MinSize;
-    }
-
-    private function validateXAxis($x){
-        $field = new FieldController();
-        $result = $field->getById($_COOKIE['MyFieldId']);
-        //var_dump($field_elements);
-        $field_elements = $result['field'];
-        $field_width = $field_elements['Width'];
-
-        return $x <= $field_width;
-    }
-
-    private function validateHealth($health){
-        return ($health > self::MinSize && $health <= self::MaxPlayerHealth);
-    }
-
     private function whereTo($whereTo){
         $player = new PlayerController();
         $array = $player->getById($_COOKIE['MyPlayerId']);
@@ -121,6 +103,24 @@ class PlayerController
         return $result;
     }
 
+    private function validateSize($size){
+        return $size > self::MinSize;
+    }
+
+    private function validateXAxis($x){
+        $field = new FieldController();
+        $result = $field->getById($_COOKIE['MyFieldId']);
+        //var_dump($field_elements);
+        $field_elements = $result['field'];
+        $field_width = $field_elements['Width'];
+
+        return $x <= $field_width;
+    }
+
+    private function validateHealth($health){
+        return ($health > self::MinSize && $health <= self::MaxPlayerHealth);
+    }
+
     private function validatePosition($pos, $axis){
         $field = new FieldController();
         $result = $field->getById($_COOKIE['MyFieldId']);
@@ -134,6 +134,34 @@ class PlayerController
         }
         if($axis == 'Y') {
             return ($pos <= $field_y && $pos > 0);
+        }
+    }
+
+    private function validateWin($pos, $axis){
+        $field = new FieldController();
+        $array1 = $field->getById($_COOKIE['MyFieldId']);
+
+        $field_elements = $array1['field'];
+        $field_x = $field_elements['End_X'];
+        $field_y = $field_elements['End_Y'];
+
+        $player = new PlayerController();
+        $array2 = $player->getById($_COOKIE['MyPlayerId']);
+        $elements = $array2['player'];
+        $x = $elements['X'];
+        $y = $elements['Y'];
+
+        if(($x == $field_x
+        || ($axis == 'X'
+        && $pos == $field_x))
+        && ($y == $field_y
+        || ($axis == 'Y'
+        && $pos == $field_y))){
+            $result = ['win'] == 'true';
+            echo json_encode($result, JSON_PRETTY_PRINT);
+            return $result;
+
+            //call player win db function
         }
     }
 
@@ -151,6 +179,8 @@ class PlayerController
             echo json_encode($result, JSON_PRETTY_PRINT);
             return $result;
         }
+
+        $this->validateWin($whereTo['pos'], $whereTo['axis']);
 
         $result = $service->move($whereTo, $whichPlayer);
 
