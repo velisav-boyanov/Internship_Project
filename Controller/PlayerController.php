@@ -8,6 +8,9 @@ use Core\View;
 
 class PlayerController
 {
+    const MaxPlayerHealth = 4;
+    const MinSize = 0;
+
     public function add()
     {
         $result = [
@@ -70,7 +73,7 @@ class PlayerController
     }
 
     private function validateSize($size){
-        return $size > 0;
+        return $size > self::MinSize;
     }
 
     private function validateXAxis($x){
@@ -84,6 +87,6 @@ class PlayerController
     }
 
     private function validateHealth($health){
-        return ($health > 0 && $health <= 4);
+        return ($health > self::MinSize && $health <= self::MaxPlayerHealth);
     }
 }

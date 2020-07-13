@@ -7,20 +7,22 @@ use Model\Services\SlotService;
 
 class SlotController
 {
-    public function add()
+    const MinSize = 0;
+
+    public function add($X, $Y, $Damage)
     {
         $result = [
             'success' => false
         ];
-        $X = $_POST['X'] ?? '';
-        $Y = $_POST['Y'] ?? '';
-        $Damage = $_POST['Damage'] ?? '';
+        //$X = $_POST['X'] ?? '';
+        //$Y = $_POST['Y'] ?? '';
+        //$Damage = 1;
         $Field_Id = $_COOKIE['MyFieldId'] ?? '';
 
         if(
             !$this->validateSize($X)
             || !$this->validateSize($Y)
-            || !$this->validateSize($Damage)
+            || !$this->validateDamage($Damage)
             || !$this->validateSize($Field_Id)
         )
         {
@@ -35,7 +37,7 @@ class SlotController
 
         echo json_encode($result, JSON_PRETTY_PRINT);
 
-        View::render('game');
+        //View::render('game');
     }
 
     public function getById()
@@ -67,6 +69,10 @@ class SlotController
     }
 
     private function validateSize($size){
-        return $size > 0;
+        return $size > self::MinSize;
+    }
+
+    private function validateDamage($size){
+        return $size >= self::MinSize;
     }
 }

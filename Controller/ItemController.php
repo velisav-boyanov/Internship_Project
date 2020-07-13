@@ -2,11 +2,13 @@
 
 
 namespace Controller;
-use Model\Service\ItemService;
+use Model\Services\ItemService;
 use Core\View;
 
 class ItemController
 {
+    const MinSize = 0;
+
     public function add()
     {
         $result = [
@@ -27,7 +29,7 @@ class ItemController
             return $result;
         }
 
-        $service = new ItemController();
+        $service = new ItemService();
         $result = $service->saveItem($Name, $Field_Id, $Player_Id);
 
         echo json_encode($result, JSON_PRETTY_PRINT);
@@ -64,6 +66,6 @@ class ItemController
     }
 
     private function validateSize($size){
-        return $size > 0;
+        return $size > self::MinSize;
     }
 }

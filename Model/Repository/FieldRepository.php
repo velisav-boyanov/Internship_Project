@@ -43,7 +43,12 @@ class FieldRepository
     public function getFieldId($End_X, $End_Y, $Width, $Length, $Bomb_Intensity){
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'SELECT Field_Id FROM `Field` WHERE `End_X` = :End_X AND `End_Y` = :End_Y AND `Width` = :Width AND `Length` = :Length AND `Bomb_Intensity` = :Bomb_Intensity';
+        $sql = 'SELECT Field_Id FROM `Field` 
+                WHERE `End_X` = :End_X 
+                AND `End_Y` = :End_Y 
+                AND `Width` = :Width 
+                AND `Length` = :Length 
+                AND `Bomb_Intensity` = :Bomb_Intensity';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['End_X' => $End_X, 'End_Y' => $End_Y, 'Width' => $Width, 'Length' => $Length, 'Bomb_Intensity' => $Bomb_Intensity,]);
