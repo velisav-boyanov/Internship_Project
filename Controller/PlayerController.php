@@ -121,12 +121,36 @@ class PlayerController
         return $result;
     }
 
+    private function validatePosition($pos, $axis){
+        $field = new FieldController();
+        $result = $field->getById($_COOKIE['MyFieldId']);
+
+        $field_elements = $result['field'];
+        $field_x = $field_elements['Width'];
+        $field_y = $field_elements['Length'];
+
+        if($axis == 'X') {
+            return ($pos <= $field_x && $pos > 0);
+        }
+        if($axis == 'Y') {
+            return ($pos <= $field_y && $pos > 0);
+        }
+    }
+
     /////////////////////////////////////////////////////////////////////////////////
     public function move(){
         $service = new PlayerService();
 
         $whereTo = $this->whereTo($_POST['Input']);
         $whichPlayer = $_COOKIE['MyPlayerId'];
+
+
+        if(!$this->validatePosition($whereTo['pos'], $whereTo['axis'])){
+            $result['msg'] = 'Out of bounds.';
+
+            echo json_encode($result, JSON_PRETTY_PRINT);
+            return $result;
+        }
 
         $result = $service->move($whereTo, $whichPlayer);
 
