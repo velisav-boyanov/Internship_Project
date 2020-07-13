@@ -90,4 +90,48 @@ class PlayerController
     private function validateHealth($health){
         return ($health > self::MinSize && $health <= self::MaxPlayerHealth);
     }
+
+    private function whereTo($whereTo){
+        $player = new PlayerController();
+        $array = $player->getById($_COOKIE['MyPlayerId']);
+        $elements = $array['player'];
+        $x = $elements['X'];
+        $y = $elements['Y'];
+
+        switch ($whereTo) {
+            //the map is printed upside down
+            case "up":
+                $result['axis'] = 'X';
+                $result['pos'] = $x - 1;
+                break;
+            case "down":
+                $result['axis'] = 'X';
+                $result['pos'] = $x + 1;
+                break;
+            case "left":
+                $result['axis'] = 'Y';
+                $result['pos'] = $y + 1;
+                break;
+            case "right":
+                $result['axis'] = 'Y';
+                $result['pos'] = $y - 1;
+                break;
+        }
+
+        return $result;
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////
+    public function move(){
+        $service = new PlayerService();
+
+        $whereTo = $this->whereTo($_POST['Input']);
+        $whichPlayer = $_COOKIE['MyPlayerId'];
+
+        $result = $service->move($whereTo, $whichPlayer);
+
+        echo json_encode($result, JSON_PRETTY_PRINT);
+        View::render('game');
+    }
+
 }

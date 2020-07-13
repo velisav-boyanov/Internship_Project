@@ -40,5 +40,18 @@ class PlayerRepository
         $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $result;
     }
+    /////////////////////////////////////////////////////////////////////////////////
+    public function move($pos, $axis, $player){
+        $pdo = DBManager::getInstance()->getConnection();
 
+        if($axis == 'Y') {
+            $sql = 'UPDATE `Player` SET `Y` = :pos WHERE `Player`.`Player_id` = :player';
+        }
+        if($axis == 'X') {
+            $sql = 'UPDATE `Player` SET `X` = :pos WHERE `Player`.`Player_id` = :player';
+        }
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['pos' => $pos, 'player' => $player]);
+
+    }
 }
