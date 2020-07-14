@@ -157,9 +157,7 @@ class PlayerController
         && ($y == $field_y
         || ($axis == 'Y'
         && $pos == $field_y))){
-            $result = ['win'] == 'true';
-            echo json_encode($result, JSON_PRETTY_PRINT);
-            return $result;
+            return 1;
 
             //call player win db function
         }
@@ -180,7 +178,12 @@ class PlayerController
             return $result;
         }
 
-        $this->validateWin($whereTo['pos'], $whereTo['axis']);
+        if($this->validateWin($whereTo['pos'], $whereTo['axis']) == 1){
+            $result['msg'] = 'You won.';
+
+            echo json_encode($result, JSON_PRETTY_PRINT);
+            return $result;
+        }
 
         $result = $service->move($whereTo, $whichPlayer);
 
