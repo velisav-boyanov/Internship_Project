@@ -1,55 +1,60 @@
-<?php echo "<br>" ?>
-
 <?php
+
 use Controller\FieldController;
-use Controller\SlotController;
+use Controller\PlayerController;
+use Core\View;
 
-$field = new FieldController();
-$result = $field->getById($_COOKIE['MyFieldId']);
+$elements1 = getInfo('MyFieldId');
+$field_x = $elements1['x'];
+$field_y = $elements1['y'];
 
-$field_elements = $result['field'];
-$field_x = $field_elements['Width'];
-$field_y = $field_elements['Length'];
-$field_bomb_chance = $field_elements['Bomb_Intensity'];
+$elements2 = getInfo('MyPlayerId');
+$player_x = $elements2['x'];
+$player_y = $elements2['y'];
 
-for($i = 1; $i <= $field_x; $i++) {
-    for($k = 1; $k <= $field_y; $k++)
-    {
-        echo "<br>" . "Loading...";
-
-        //No bombs on the first row, because the user spawns there.
-        if($i == 1) {
-            $bomb = 0;
-        }elseif($i > 1){
-            $bomb = isBomb($field_bomb_chance);
+//echo $field_y . $field_x . $player_y . $player_x;
+echo "<br>";
+for($i = 1; $i <= $field_x; $i++){
+    for($k = 1; $k <= $field_y; $k++){
+        //echo "#";
+        if(($k == $player_y) and ($i == $player_x)){
+            echo 'P ';
+        }else{
+            echo '# ';
         }
-
-        $slot = new SlotController();
-        $slot->add($i, $k, $bomb);
     }
+    echo "<br>";
 }
-echo "<br>" . "Finished" . "<br>";
 
+//gets the x and y for fields or players
+function getInfo($type){
+    $result['status'] = "false";
 
-//Sets damage for field slot.
-function isBomb($percentage){
-    $random = mt_rand(1, 100) / 100;
-
-    $result = 0;
-
-    if($random <= $percentage){
-        $result = 1;
+    $object = new PlayerController();
+    if($type == 'MyFieldId') {
+        $object = new FieldController();
     }
-    if($random <= ($percentage*2)/3){
-        $result = 2;
-    }
-    if($random <= $percentage/3){
-        $result = 3;
+
+    $obj = $object->getById($_COOKIE[$type]);
+    
+    if($type == 'MyPlayerId') {
+        $elements = $obj['player'];
+
+        $result['x'] = $elements['X'];
+        $result['y'] = $elements['Y'];
+        $result['status'] = "true";
+    }elseif($type = 'MyFieldId') {
+        $elements = $obj['field'];
+
+        $result['x'] = $elements['Width'];
+        $result['y'] = $elements['Length'];
+        $result['status'] = "true";
     }
     return $result;
 }
-?>
 
+echo "Game go zoom.";
+?>
 
 <!doctype html>
 <html lang="en">
@@ -61,6 +66,10 @@ function isBomb($percentage){
     <title>Document</title>
 </head>
 <body>
-<h>Bruhhhhh</h>
+    <form action="index.php?target=player&action=move" method="post">
+        <label>Enter input:</label>
+        <input type="text" name = "Input" class="form-control" required>
+        <button type="submit" class="btn btn-primary"> Move </button>
+    </form>
 </body>
 </html>

@@ -41,16 +41,16 @@ class PlayerController
         echo "<br>";
         echo json_encode($result, JSON_PRETTY_PRINT);
 
-        View::render('game');
+        View::render('game_setup');
     }
 
-    public function getById()
+    public function getById($playerId)
     {
         $result = [
             'success' => false
         ];
 
-        $playerId = $_POST['playerId'] ?? '0';
+        //$playerId = $_POST['playerId'] ?? '0';
 
         if (!$this->validateSize($playerId)) {
             $result['msg'] = 'Invalid player id';
@@ -62,6 +62,7 @@ class PlayerController
         $result = $service->getPlayer($playerId);
 
         echo json_encode($result, JSON_PRETTY_PRINT);
+        return $result;
     }
 
     public function getAll()
@@ -70,6 +71,36 @@ class PlayerController
         $result = $service->getAllPlayers();
 
         echo json_encode($result, JSON_PRETTY_PRINT);
+    }
+
+    private function whereTo($whereTo){
+        $player = new PlayerController();
+        $array = $player->getById($_COOKIE['MyPlayerId']);
+        $elements = $array['player'];
+        $x = $elements['X'];
+        $y = $elements['Y'];
+
+        switch ($whereTo) {
+            //the map is printed upside down
+            case "up":
+                $result['axis'] = 'X';
+                $result['pos'] = $x - 1;
+                break;
+            case "down":
+                $result['axis'] = 'X';
+                $result['pos'] = $x + 1;
+                break;
+            case "left":
+                $result['axis'] = 'Y';
+                $result['pos'] = $y + 1;
+                break;
+            case "right":
+                $result['axis'] = 'Y';
+                $result['pos'] = $y - 1;
+                break;
+        }
+
+        return $result;
     }
 
     private function validateSize($size){
@@ -89,4 +120,83 @@ class PlayerController
     private function validateHealth($health){
         return ($health > self::MinSize && $health <= self::MaxPlayerHealth);
     }
+
+    private function validatePosition($pos, $axis){
+        $field = new FieldController();
+        $result = $field->getById($_COOKIE['MyFieldId']);
+
+        $field_elements = $result['field'];
+        $field_x = $field_elements['Width'];
+        $field_y = $field_elements['Length'];
+
+        if($axis == 'X') {
+            return ($pos <= $field_x && $pos > 0);
+        }
+        if($axis == 'Y') {
+            return ($pos <= $field_y && $pos > 0);
+        }
+    }
+
+    private function validateWin($pos, $axis){
+        $field = new FieldController();
+        $array1 = $field->getById($_COOKIE['MyFieldId']);
+
+        $field_elements = $array1['field'];
+        $field_x = $field_elements['End_X'];
+        $field_y = $field_elements['End_Y'];
+
+        $player = new PlayerController();
+        $array2 = $player->getById($_COOKIE['MyPlayerId']);
+        $elements = $array2['player'];
+        $x = $elements['X'];
+        $y = $elements['Y'];
+
+        if(($x == $field_x
+        || ($axis == 'X'
+        && $pos == $field_x))
+        && ($y == $field_y
+        || ($axis == 'Y'
+        && $pos == $field_y))){
+            $this->endGame();
+
+            return 1;
+        }
+    }
+
+    /////////////////////////////////////////////////////////////////////////////////
+    public function move(){
+        $service = new PlayerService();
+
+        $whereTo = $this->whereTo($_POST['Input']);
+        $whichPlayer = $_COOKIE['MyPlayerId'];
+
+
+        if(!$this->validatePosition($whereTo['pos'], $whereTo['axis'])){
+            $result['msg'] = 'Out of bounds.';
+
+            echo json_encode($result, JSON_PRETTY_PRINT);
+            return $result;
+        }
+
+        if($this->validateWin($whereTo['pos'], $whereTo['axis']) == 1){
+            $result['msg'] = 'You won.';
+
+            echo json_encode($result, JSON_PRETTY_PRINT);
+            return $result;
+        }
+
+        $result = $service->move($whereTo, $whichPlayer);
+
+        echo json_encode($result, JSON_PRETTY_PRINT);
+        View::render('game');
+    }
+
+    private function endGame(){
+        $service = new PlayerService();
+
+        $whichPlayer = $_COOKIE['MyPlayerId'];
+
+        $service->endGame($whichPlayer);
+    }
+
 }

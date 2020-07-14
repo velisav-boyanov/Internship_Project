@@ -72,4 +72,23 @@ class PlayerService
         $result['player'] = $player;
         return $result;
     }
+    /////////////////////////////////////////////////////////////////////////////////
+    public function move($whereTo, $whichPlayer){
+        $result = [
+            'success' => false
+        ];
+
+        $repo = new PlayerRepository();
+        $axis = $whereTo['axis'];
+        $pos = $whereTo['pos'];
+        $repo->move($pos, $axis, $whichPlayer);
+
+        $result['success'] = true;
+        return $result;
+    }
+
+    public function endGame($whichPlayer){
+        $repo = new PlayerRepository();
+        $repo->endGame($whichPlayer);
+    }
 }

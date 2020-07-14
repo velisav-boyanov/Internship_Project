@@ -20,10 +20,10 @@ class PlayerRepository
     {
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'SELECT * FROM `Player` WHERE `Player_Id` = :Player_Id';
+        $sql = 'SELECT * FROM `Player` WHERE `Player_Id` = :playerId';
 
         $stmt = $pdo->prepare($sql);
-        $stmt->execute(['playerId' => $playerId,]);
+        $stmt->execute(['playerId' => $playerId]);
 
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
         return $result;
@@ -40,5 +40,30 @@ class PlayerRepository
         $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $result;
     }
+    /////////////////////////////////////////////////////////////////////////////////
+    public function move($pos, $axis, $player){
+        $pdo = DBManager::getInstance()->getConnection();
 
+        if($axis == 'Y') {
+            $sql = 'UPDATE `Player` SET `Y` = :pos WHERE `Player`.`Player_id` = :player';
+        }
+        if($axis == 'X') {
+            $sql = 'UPDATE `Player` SET `X` = :pos WHERE `Player`.`Player_id` = :player';
+        }
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['pos' => $pos, 'player' => $player]);
+
+    }
+
+    public function endGame($playerId){
+        $win = 1;
+        $player = $playerId;
+
+        $pdo = DBManager::getInstance()->getConnection();
+
+        $sql = 'UPDATE `Player` SET `Finished` = :win WHERE `Player`.`Player_id` = :player';
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['win' => $win, 'player' => $player]);
+    }
 }
