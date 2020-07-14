@@ -54,4 +54,16 @@ class PlayerRepository
         $stmt->execute(['pos' => $pos, 'player' => $player]);
 
     }
+
+    public function endGame($playerId){
+        $win = 1;
+        $player = $playerId;
+
+        $pdo = DBManager::getInstance()->getConnection();
+
+        $sql = 'UPDATE `Player` SET `Finished` = :win WHERE `Player`.`Player_id` = :player';
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['win' => $win, 'player' => $player]);
+    }
 }

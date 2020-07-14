@@ -86,4 +86,9 @@ class PlayerService
         $result['success'] = true;
         return $result;
     }
+
+    public function endGame($whichPlayer){
+        $repo = new PlayerRepository();
+        $repo->endGame($whichPlayer);
+    }
 }

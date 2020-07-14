@@ -157,9 +157,9 @@ class PlayerController
         && ($y == $field_y
         || ($axis == 'Y'
         && $pos == $field_y))){
-            return 1;
+            $this->endGame();
 
-            //call player win db function
+            return 1;
         }
     }
 
@@ -189,6 +189,14 @@ class PlayerController
 
         echo json_encode($result, JSON_PRETTY_PRINT);
         View::render('game');
+    }
+
+    private function endGame(){
+        $service = new PlayerService();
+
+        $whichPlayer = $_COOKIE['MyPlayerId'];
+
+        $service->endGame($whichPlayer);
     }
 
 }
