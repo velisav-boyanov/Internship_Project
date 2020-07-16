@@ -91,4 +91,9 @@ class PlayerService
         $repo = new PlayerRepository();
         $repo->endGame($whichPlayer);
     }
+
+    public function getDamage($whichPlayer, $damage, $health){
+        $repo = new PlayerRepository();
+        $repo->move($whichPlayer, $damage, $health);
+    }
 }

@@ -39,4 +39,19 @@ class SlotRepository
         $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $result;
     }
+
+    public function getDamageByFieldXY($fieldId, $x, $y)
+    {
+        $id = $fieldId;
+
+        $pdo = DBManager::getInstance()->getConnection();
+
+        $sql = 'SELECT * FROM `Slot` WHERE `Field_Id` = :id AND `X` = :x AND `Y` = :y';
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['x' => $x, 'y' => $y, 'id' => $id]);
+
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $result;
+    }
 }

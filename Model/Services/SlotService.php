@@ -64,4 +64,17 @@ class SlotService
         $result['slot'] = $slot;
         return $result;
     }
+
+    public function getDamageByFieldXY($fieldId, $x, $y)
+    {
+        $repo = new SlotRepository();
+        $damage = $repo->getDamageByFieldXY($fieldId, $x, $y);
+
+        if (!$damage) {
+            $result['msg'] = 'No such slot exists.';
+            return $result;
+        }
+        $result = $damage;
+        return $result;
+    }
 }

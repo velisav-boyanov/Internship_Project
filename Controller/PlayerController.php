@@ -185,8 +185,16 @@ class PlayerController
             return $result;
         }
 
-        $result = $service->move($whereTo, $whichPlayer);
+        if($this->getDamage() == 1){
+            $result['msg'] = 'YOU DIED.';
 
+            echo json_encode($result, JSON_PRETTY_PRINT);
+            return $result;
+        }
+
+        $result = $service->move($whereTo, $whichPlayer);
+        $this->getDamage();
+        
         echo json_encode($result, JSON_PRETTY_PRINT);
         View::render('game');
     }
@@ -197,6 +205,26 @@ class PlayerController
         $whichPlayer = $_COOKIE['MyPlayerId'];
 
         $service->endGame($whichPlayer);
+    }
+
+    private function getDamage(){
+        $service = new PlayerService();
+
+        $player = new PlayerController();
+        $array = $player->getById($_COOKIE['MyPlayerId']);
+        $elements = $array['player'];
+        $health = $elements['Health'];
+        $x = $elements['X'];
+        $y = $elements['Y'];
+
+        $slot = new SlotController();
+        $damageSlot = $slot->getDamageByFieldXY($_COOKIE['MyFieldId'], $x, $y);
+        $damage = $damageSlot['Damage'];
+        $service->getDamage($_COOKIE['MyPlayerId'], $damage, $health);
+
+        if($health - $damage <= 0){
+            return 1;
+        }
     }
 
 }

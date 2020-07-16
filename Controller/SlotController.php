@@ -75,4 +75,13 @@ class SlotController
     private function validateDamage($size){
         return $size >= self::MinSize;
     }
+
+    public function getDamageByFieldXY($fieldId, $x, $y)
+    {
+        $service = new SlotService();
+        $result = $service->getDamageByFieldXY($fieldId, $x, $y);
+
+        echo json_encode($result, JSON_PRETTY_PRINT);
+        return $result;
+    }
 }

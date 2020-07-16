@@ -66,4 +66,20 @@ class PlayerRepository
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['win' => $win, 'player' => $player]);
     }
+
+    public function getDamage($playerId, $damage, $health){
+        $player = $playerId;
+        $life = $health - $damage;
+        if($life < 0){
+            $life = 0;
+        }
+        $pdo = DBManager::getInstance()->getConnection();
+
+        $sql = 'UPDATE `Player` SET `Health` = :life WHERE `Player`.`Player_id` = :player';
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['life' => $life, 'player' => $player]);
+
+
+    }
 }
