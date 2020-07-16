@@ -39,7 +39,7 @@ class PlayerController
         $result = $service->savePlayer($X, $Y, $Field_Id, $Health);
 
         echo "<br>";
-        echo json_encode($result, JSON_PRETTY_PRINT);
+        //echo json_encode($result, JSON_PRETTY_PRINT);
 
         View::render('game_setup');
     }
@@ -61,7 +61,7 @@ class PlayerController
         $service = new PlayerService();
         $result = $service->getPlayer($playerId);
 
-        echo json_encode($result, JSON_PRETTY_PRINT);
+        //echo json_encode($result, JSON_PRETTY_PRINT);
         return $result;
     }
 
@@ -174,7 +174,7 @@ class PlayerController
         if(!$this->validatePosition($whereTo['pos'], $whereTo['axis'])){
             $result['msg'] = 'Out of bounds.';
 
-            echo json_encode($result, JSON_PRETTY_PRINT);
+            //echo json_encode($result, JSON_PRETTY_PRINT);
             return $result;
         }
 
@@ -193,9 +193,9 @@ class PlayerController
         }
 
         $result = $service->move($whereTo, $whichPlayer);
-        $this->getDamage();
-        
-        echo json_encode($result, JSON_PRETTY_PRINT);
+        //$this->getDamage();
+
+        //echo json_encode($result, JSON_PRETTY_PRINT);
         View::render('game');
     }
 
@@ -220,6 +220,8 @@ class PlayerController
         $slot = new SlotController();
         $damageSlot = $slot->getDamageByFieldXY($_COOKIE['MyFieldId'], $x, $y);
         $damage = $damageSlot['Damage'];
+        var_dump($damage);
+        var_dump($health);
         $service->getDamage($_COOKIE['MyPlayerId'], $damage, $health);
 
         if($health - $damage <= 0){

@@ -40,7 +40,7 @@ class FieldController
         $service = new FieldService();
         $result = $service->saveField($Width, $Length, $Bomb_Intensity, $End_X, $End_Y);
 
-        echo json_encode($result, JSON_PRETTY_PRINT);
+        //echo json_encode($result, JSON_PRETTY_PRINT);
 
         View::render('field');
     }
@@ -62,7 +62,7 @@ class FieldController
         $service = new FieldService();
         $result = $service->getField($fieldId);
 
-        echo json_encode($result, JSON_PRETTY_PRINT);
+        //echo json_encode($result, JSON_PRETTY_PRINT);
         return $result;
     }
 

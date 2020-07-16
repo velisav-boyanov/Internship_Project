@@ -94,6 +94,6 @@ class PlayerService
 
     public function getDamage($whichPlayer, $damage, $health){
         $repo = new PlayerRepository();
-        $repo->move($whichPlayer, $damage, $health);
+        $repo->getDamage($whichPlayer, $damage, $health);
     }
 }

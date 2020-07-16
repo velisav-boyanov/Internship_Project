@@ -79,7 +79,5 @@ class PlayerRepository
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['life' => $life, 'player' => $player]);
-
-
     }
 }
