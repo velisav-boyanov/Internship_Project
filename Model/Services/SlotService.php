@@ -77,4 +77,10 @@ class SlotService
         $result = $damage;
         return $result;
     }
+
+    public function find($slotId)
+    {
+        $repo = new SlotRepository();
+        $repo->find($slotId);
+    }
 }

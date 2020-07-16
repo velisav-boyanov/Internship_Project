@@ -54,4 +54,17 @@ class SlotRepository
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
         return $result;
     }
+
+    public function find($slotId)
+    {
+        $id = $slotId;
+        $found = 1;
+
+        $pdo = DBManager::getInstance()->getConnection();
+
+        $sql = 'UPDATE `Slot` SET `Found` = :found WHERE `Slot`.`Slot_Id` = :id';
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['found' => $found, 'id' => $id]);
+    }
 }

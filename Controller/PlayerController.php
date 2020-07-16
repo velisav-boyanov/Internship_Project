@@ -39,7 +39,7 @@ class PlayerController
         $result = $service->savePlayer($X, $Y, $Field_Id, $Health);
 
         echo "<br>";
-        //echo json_encode($result, JSON_PRETTY_PRINT);
+        echo json_encode($result, JSON_PRETTY_PRINT);
 
         View::render('game_setup');
     }
@@ -61,7 +61,7 @@ class PlayerController
         $service = new PlayerService();
         $result = $service->getPlayer($playerId);
 
-        //echo json_encode($result, JSON_PRETTY_PRINT);
+        echo json_encode($result, JSON_PRETTY_PRINT);
         return $result;
     }
 
@@ -165,6 +165,7 @@ class PlayerController
 
     /////////////////////////////////////////////////////////////////////////////////
     public function move(){
+        $slot =new SlotController();
         $service = new PlayerService();
 
         $whereTo = $this->whereTo($_POST['Input']);
@@ -174,7 +175,7 @@ class PlayerController
         if(!$this->validatePosition($whereTo['pos'], $whereTo['axis'])){
             $result['msg'] = 'Out of bounds.';
 
-            //echo json_encode($result, JSON_PRETTY_PRINT);
+            echo json_encode($result, JSON_PRETTY_PRINT);
             return $result;
         }
 
@@ -193,9 +194,9 @@ class PlayerController
         }
 
         $result = $service->move($whereTo, $whichPlayer);
-        //$this->getDamage();
+        $slot->find();
 
-        //echo json_encode($result, JSON_PRETTY_PRINT);
+        echo json_encode($result, JSON_PRETTY_PRINT);
         View::render('game');
     }
 

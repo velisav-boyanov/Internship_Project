@@ -84,4 +84,23 @@ class SlotController
         echo json_encode($result, JSON_PRETTY_PRINT);
         return $result;
     }
+
+    public function find()
+    {
+        $player = new PlayerController();
+
+        $array = $player->getById($_COOKIE['MyPlayerId']);
+        $elements = $array['player'];
+        $x = $elements['X'];
+        $y = $elements['Y'];
+
+        $slot = new SlotController();
+        $thisSlot = $slot->getDamageByFieldXY($_COOKIE['MyFieldId'], $x, $y);
+
+        $slotId = $thisSlot['Slot_Id'];
+
+        $service = new SlotService();
+        $service->find($slotId);
+    }
+
 }
