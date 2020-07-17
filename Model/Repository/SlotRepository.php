@@ -91,4 +91,15 @@ class SlotRepository
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
     }
+
+    public function setRadar($radar, $slotId){
+        $id = $slotId;
+
+        $pdo = DBManager::getInstance()->getConnection();
+
+        $sql = 'UPDATE `Slot` SET `Radar` = :radar WHERE `Slot`.`Slot_Id` = :id';
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['radar' => $radar, 'id' => $id]);
+    }
 }

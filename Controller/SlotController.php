@@ -40,13 +40,12 @@ class SlotController
         //View::render('game');
     }
 
-    public function getById()
+    public function getById($slotId)
     {
         $result = [
             'success' => false
         ];
 
-        $slotId = $_POST['slotId'] ?? '0';
 
         if (!$this->validateSize($slotId)) {
             $result['msg'] = 'Invalid slot id';
@@ -55,7 +54,7 @@ class SlotController
         }
 
         $service = new SlotService();
-        $result = $service->getSlot($slotId);
+        $result = ['slot' => $service->getSlot($slotId)];
 
         echo json_encode($result, JSON_PRETTY_PRINT);
     }
@@ -127,6 +126,83 @@ class SlotController
 
         $service = new SlotService();
         $service->removeSlots($id);
+    }
+
+    public function setRadar(){
+        $player = new PlayerController();
+
+        $array = $player->getById($_COOKIE['MyPlayerId']);
+        $elements = $array['player'];
+        $x = $elements['X'];
+        $y = $elements['Y'];
+
+        $slot = new SlotController();
+        $thisSlot = $slot->getDamageByFieldXY($_COOKIE['MyFieldId'], $x, $y);
+
+        $slotId = $thisSlot['Slot_Id'];
+        //^get slot id^
+
+        $radar = 0;
+        for($i = 0; $i < 8; $i++){
+            switch ($i) {
+                case 0:
+                    $info1 = $slot->getById($slotId);
+                    $info2 = $info1['slot'];
+                    $x = $info2['X'] - 1;
+                    $y = $info2['Y'] + 1;
+                    break;
+                case 1:
+                    $info1 = $slot->getById($slotId);
+                    $info2 = $info1['slot'];
+                    $x = $info2['X'];
+                    $y = $info2['Y'] + 1;
+                    break;
+                case 2:
+                    $info1 = $slot->getById($slotId);
+                    $info2 = $info1['slot'];
+                    $x = $info2['X'] + 1;
+                    $y = $info2['Y'] + 1;
+                    break;
+                case 3:
+                    $info1 = $slot->getById($slotId);
+                    $info2 = $info1['slot'];
+                    $x = $info2['X'] - 1;
+                    $y = $info2['Y'];
+                    break;
+                case 4:
+                    $info1 = $slot->getById($slotId);
+                    $info2 = $info1['slot'];
+                    $x = $info2['X'] + 1;
+                    $y = $info2['Y'];
+                    break;
+                case 5:
+                    $info1 = $slot->getById($slotId);
+                    $info2 = $info1['slot'];
+                    $x = $info2['X'] - 1;
+                    $y = $info2['Y'] - 1;
+                    break;
+                case 6:
+                    $info1 = $slot->getById($slotId);
+                    $info2 = $info1['slot'];
+                    $x = $info2['X'];
+                    $y = $info2['Y'] - 1;
+                    break;
+                case 7:
+                    $info1 = $slot->getById($slotId);
+                    $info2 = $info1['slot'];
+                    $x = $info2['X'] + 1;
+                    $y = $info2['Y'] - 1;
+                    break;
+            }
+
+            $service = new SlotService();
+            $result = $service->getDamageByFieldXY($_COOKIE['MyFieldId'], $x, $y);
+            $radar += $result['Damage'];
+        }
+        //^get bombs in vicinity
+
+        $service = new SlotService();
+        $service->setRadar($radar, $slotId);
     }
 
 }

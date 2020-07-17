@@ -93,4 +93,9 @@ class SlotService
         $repo = new SlotRepository();
         $repo->removeSlots($fieldId);
     }
+
+    public function setRadar($radar, $slotId){
+        $repo = new SlotRepository();
+        $repo->setRadar($radar, $slotId);
+    }
 }
