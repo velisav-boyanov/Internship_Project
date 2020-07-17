@@ -103,4 +103,30 @@ class SlotController
         $service->find($slotId);
     }
 
+    public function emptyBomb()
+    {
+        $player = new PlayerController();
+
+        $array = $player->getById($_COOKIE['MyPlayerId']);
+        $elements = $array['player'];
+        $x = $elements['X'];
+        $y = $elements['Y'];
+
+        $slot = new SlotController();
+        $thisSlot = $slot->getDamageByFieldXY($_COOKIE['MyFieldId'], $x, $y);
+
+        $slotId = $thisSlot['Slot_Id'];
+
+        $service = new SlotService();
+        $service->emptyBomb($slotId);
+    }
+
+    public function removeSlots()
+    {
+        $id = $_COOKIE['MyFieldId'];
+
+        $service = new SlotService();
+        $service->removeSlots($id);
+    }
+
 }

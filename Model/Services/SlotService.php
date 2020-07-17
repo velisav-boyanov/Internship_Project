@@ -83,4 +83,14 @@ class SlotService
         $repo = new SlotRepository();
         $repo->find($slotId);
     }
+
+    public function emptyBomb($slotId){
+        $repo = new SlotRepository();
+        $repo->emptyBomb($slotId);
+    }
+
+    public function removeSlots($fieldId){
+        $repo = new SlotRepository();
+        $repo->removeSlots($fieldId);
+    }
 }

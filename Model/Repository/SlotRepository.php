@@ -67,4 +67,28 @@ class SlotRepository
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['found' => $found, 'id' => $id]);
     }
+
+    public function emptyBomb($slotId)
+    {
+        $id = $slotId;
+        $damage = 0;
+
+        $pdo = DBManager::getInstance()->getConnection();
+
+        $sql = 'UPDATE `Slot` SET `Damage` = :damage WHERE `Slot`.`Slot_Id` = :id';
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['damage' => $damage, 'id' => $id]);
+
+    }
+    public function removeSlots($fieldId)
+    {
+        $id = $fieldId;
+
+        $pdo = DBManager::getInstance()->getConnection();
+        $sql = 'DELETE FROM `Slot` WHERE `Slot` . `Field_Id` = :id';
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
+    }
 }

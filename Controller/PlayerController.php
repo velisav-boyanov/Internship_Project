@@ -179,9 +179,14 @@ class PlayerController
             return $result;
         }
 
+
+        $result = $service->move($whereTo, $whichPlayer);
+        $slot->find();
+
         if($this->validateWin($whereTo['pos'], $whereTo['axis']) == 1){
             $result['msg'] = 'You won.';
 
+            $slot->removeSlots();
             echo json_encode($result, JSON_PRETTY_PRINT);
             return $result;
         }
@@ -193,8 +198,7 @@ class PlayerController
             return $result;
         }
 
-        $result = $service->move($whereTo, $whichPlayer);
-        $slot->find();
+        $slot->emptyBomb();
 
         echo json_encode($result, JSON_PRETTY_PRINT);
         View::render('game');
