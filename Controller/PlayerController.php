@@ -31,15 +31,15 @@ class PlayerController
         {
             $result['msg'] = 'Invalid player parameters';
 
-            echo json_encode($result, JSON_PRETTY_PRINT);
+            //echo json_encode($result, JSON_PRETTY_PRINT);
             return $result;
         }
 
         $service = new PlayerService();
         $result = $service->savePlayer($X, $Y, $Field_Id, $Health);
 
-        echo "<br>";
-        echo json_encode($result, JSON_PRETTY_PRINT);
+        //echo "<br>";
+        //echo json_encode($result, JSON_PRETTY_PRINT);
 
         View::render('game_setup');
     }
@@ -54,14 +54,14 @@ class PlayerController
 
         if (!$this->validateSize($playerId)) {
             $result['msg'] = 'Invalid player id';
-            echo json_encode($result, JSON_PRETTY_PRINT);
+            //echo json_encode($result, JSON_PRETTY_PRINT);
             return $result;
         }
 
         $service = new PlayerService();
         $result = $service->getPlayer($playerId);
 
-        echo json_encode($result, JSON_PRETTY_PRINT);
+        //echo json_encode($result, JSON_PRETTY_PRINT);
         return $result;
     }
 
@@ -70,7 +70,7 @@ class PlayerController
         $service = new PlayerService();
         $result = $service->getAllPlayers();
 
-        echo json_encode($result, JSON_PRETTY_PRINT);
+        //echo json_encode($result, JSON_PRETTY_PRINT);
     }
 
     private function whereTo($whereTo){
@@ -163,8 +163,27 @@ class PlayerController
         }
     }
 
+    private function scan(){
+        $slot = new SlotController();
+
+        $field = new FieldController();
+        $result = $field->getById($_COOKIE['MyFieldId']);
+
+        $field_elements = $result['field'];
+        $x = $field_elements['Width'];
+        $y = $field_elements['Length'];
+
+        for($i = 1; $i <= $x; $i++){
+            for($k = 1; $k <= $y; $k++){
+                $slot->setRadar($i, $k);
+            }
+        }
+    }
+
     /////////////////////////////////////////////////////////////////////////////////
     public function move(){
+      $this->scan();
+
         $slot =new SlotController();
         $service = new PlayerService();
 
@@ -179,7 +198,6 @@ class PlayerController
             return $result;
         }
 
-
         $result = $service->move($whereTo, $whichPlayer);
         $slot->find();
 
@@ -193,6 +211,7 @@ class PlayerController
 
         if($this->getDamage() == 1){
             $result['msg'] = 'YOU DIED.';
+            $slot->removeSlots();
 
             echo json_encode($result, JSON_PRETTY_PRINT);
             return $result;
@@ -200,7 +219,7 @@ class PlayerController
 
         $slot->emptyBomb();
 
-        echo json_encode($result, JSON_PRETTY_PRINT);
+        //echo json_encode($result, JSON_PRETTY_PRINT);
         View::render('game');
     }
 

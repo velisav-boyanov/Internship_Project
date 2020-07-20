@@ -19,10 +19,10 @@ class SlotRepository
     {
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'SELECT * FROM `Slot` WHERE `Slot_Id` = :Slot_Id';
+        $sql = 'SELECT * FROM `Slot` WHERE `Slot_Id` = :slotid';
 
         $stmt = $pdo->prepare($sql);
-        $stmt->execute(['slotId' => $slotId,]);
+        $stmt->execute(['slotid' => $slotId]);
 
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
         return $result;
