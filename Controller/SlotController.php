@@ -163,8 +163,8 @@ class SlotController
             if(!(($new_x < 1 || $new_y < 1) || ($new_x > $width || $new_y > $length))){
                 $newSlot = $slot->getDamageByFieldXY($_COOKIE['MyFieldId'], $new_x, $new_y);
 
-                var_dump($newSlot['Damage']);
-                echo "<br>";
+                //var_dump($newSlot['Damage']);
+                //echo "<br>";
                 if($newSlot['Damage'] > 0){
                     $radar++;
                 }

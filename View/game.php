@@ -2,6 +2,7 @@
 
 use Controller\FieldController;
 use Controller\PlayerController;
+use Controller\SlotController;
 use Core\View;
 
 $elements1 = getInfo('MyFieldId');
@@ -16,11 +17,22 @@ $player_y = $elements2['y'];
 echo "<br>";
 for($i = 1; $i <= $field_x; $i++){
     for($k = 1; $k <= $field_y; $k++){
-        //echo "#";
+        $slot = new SlotController();
+        $elements = $slot->getDamageByFieldXY($_COOKIE['MyFieldId'], $i, $k);
+
         if(($k == $player_y) and ($i == $player_x)){
-            echo 'P ';
+            if($elements['Found'] == 1) {
+                echo 'P' . $elements['Radar'] . " ";
+            }else{
+                echo 'P  ';
+            }
         }else{
-            echo '# ';
+            if($elements['Found'] == 1){
+                echo '#' . $elements['Radar'] . " ";
+            }else{
+                echo '#  ';
+            }
+
         }
     }
     echo "<br>";
