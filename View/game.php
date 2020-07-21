@@ -22,17 +22,16 @@ for($i = 1; $i <= $field_x; $i++){
 
         if(($k == $player_y) and ($i == $player_x)){
             if($elements['Found'] == 1) {
-                echo 'P' . $elements['Radar'] . " ";
+                echo 'P' . $elements['Radar'];
             }else{
                 echo 'P  ';
             }
         }else{
             if($elements['Found'] == 1){
-                echo '#' . $elements['Radar'] . " ";
+                echo $elements['Radar'] . " ";
             }else{
                 echo '#  ';
             }
-
         }
     }
     echo "<br>";

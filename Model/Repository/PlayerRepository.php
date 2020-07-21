@@ -29,7 +29,8 @@ class PlayerRepository
         return $result;
     }
 
-    public function getAllPlayers(){
+    public function getAllPlayers()
+    {
         $pdo = DBManager::getInstance()->getConnection();
 
         $sql = 'SELECT * FROM `Player`';
@@ -40,42 +41,38 @@ class PlayerRepository
         $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $result;
     }
-    /////////////////////////////////////////////////////////////////////////////////
-    public function move($pos, $axis, $player){
+
+    public function move($pos, $axis, $player)
+    {
         $pdo = DBManager::getInstance()->getConnection();
 
         if($axis == 'Y') {
-            $sql = 'UPDATE `Player` SET `Y` = :pos WHERE `Player`.`Player_id` = :player';
+            $sql = 'UPDATE `Player` SET `Y` = :pos WHERE `Player_id` = :player';
         }
         if($axis == 'X') {
-            $sql = 'UPDATE `Player` SET `X` = :pos WHERE `Player`.`Player_id` = :player';
+            $sql = 'UPDATE `Player` SET `X` = :pos WHERE `Player_id` = :player';
         }
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['pos' => $pos, 'player' => $player]);
 
     }
 
-    public function endGame($playerId){
+    public function endGame($player)
+    {
         $win = 1;
-        $player = $playerId;
-
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'UPDATE `Player` SET `Finished` = :win WHERE `Player`.`Player_id` = :player';
+        $sql = 'UPDATE `Player` SET `Finished` = :win WHERE `Player_id` = :player';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['win' => $win, 'player' => $player]);
     }
 
-    public function getDamage($playerId, $damage, $health){
-        $player = $playerId;
-        $life = $health - $damage;
-        if($life < 0){
-            $life = 0;
-        }
+    public function applyDamage($player, $life)
+    {
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'UPDATE `Player` SET `Health` = :life WHERE `Player`.`Player_id` = :player';
+        $sql = 'UPDATE `Player` SET `Health` = :life WHERE `Player_id` = :player';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['life' => $life, 'player' => $player]);

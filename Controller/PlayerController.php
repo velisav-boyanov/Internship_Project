@@ -182,9 +182,9 @@ class PlayerController
 
     /////////////////////////////////////////////////////////////////////////////////
     public function move(){
-      $this->scan();
+        $this->scan();
 
-        $slot =new SlotController();
+        $slot = new SlotController();
         $service = new PlayerService();
 
         $whereTo = $this->whereTo($_POST['Input']);
@@ -209,7 +209,7 @@ class PlayerController
             return $result;
         }
 
-        if($this->getDamage() == 1){
+        if($this->isDead() == 1){
             $result['msg'] = 'YOU DIED.';
             $slot->removeSlots();
 
@@ -231,7 +231,7 @@ class PlayerController
         $service->endGame($whichPlayer);
     }
 
-    private function getDamage(){
+    private function applyDamage(){
         $service = new PlayerService();
 
         $player = new PlayerController();
@@ -246,11 +246,20 @@ class PlayerController
         $damage = $damageSlot['Damage'];
         var_dump($damage);
         var_dump($health);
-        $service->getDamage($_COOKIE['MyPlayerId'], $damage, $health);
+        $service->applyDamage($_COOKIE['MyPlayerId'], $damage, $health);
 
-        if($health - $damage <= 0){
+    }
+
+    private function isDead(){
+        $player = new PlayerController();
+        $array = $player->getById($_COOKIE['MyPlayerId']);
+        $elements = $array['player'];
+        $health = $elements['Health'];
+
+        if($health == 0){
             return 1;
         }
+        return 0;
     }
 
 }

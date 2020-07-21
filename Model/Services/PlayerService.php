@@ -92,8 +92,12 @@ class PlayerService
         $repo->endGame($whichPlayer);
     }
 
-    public function getDamage($whichPlayer, $damage, $health){
+    public function applyDamage($whichPlayer, $damage, $health){
         $repo = new PlayerRepository();
-        $repo->getDamage($whichPlayer, $damage, $health);
+        $life = $health - $damage;
+        if($life < 0){
+            $life = 0;
+        }
+        $repo->applyDamage($whichPlayer, $life);
     }
 }
