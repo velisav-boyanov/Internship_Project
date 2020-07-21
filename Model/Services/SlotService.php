@@ -64,4 +64,38 @@ class SlotService
         $result['slot'] = $slot;
         return $result;
     }
+
+    public function getDamageByFieldXY($fieldId, $x, $y)
+    {
+        $repo = new SlotRepository();
+        $damage = $repo->getDamageByFieldXY($fieldId, $x, $y);
+
+        if (!$damage) {
+            $result['msg'] = 'No such slot exists.';
+            return $result;
+        }
+        $result = $damage;
+        return $result;
+    }
+
+    public function find($slotId)
+    {
+        $repo = new SlotRepository();
+        $repo->find($slotId);
+    }
+
+    public function emptyBomb($slotId){
+        $repo = new SlotRepository();
+        $repo->emptyBomb($slotId);
+    }
+
+    public function removeSlots($fieldId){
+        $repo = new SlotRepository();
+        $repo->removeSlots($fieldId);
+    }
+
+    public function setRadar($radar, $slotId){
+        $repo = new SlotRepository();
+        $repo->setRadar($radar, $slotId);
+    }
 }

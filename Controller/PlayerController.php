@@ -31,15 +31,15 @@ class PlayerController
         {
             $result['msg'] = 'Invalid player parameters';
 
-            echo json_encode($result, JSON_PRETTY_PRINT);
+            //echo json_encode($result, JSON_PRETTY_PRINT);
             return $result;
         }
 
         $service = new PlayerService();
         $result = $service->savePlayer($X, $Y, $Field_Id, $Health);
 
-        echo "<br>";
-        echo json_encode($result, JSON_PRETTY_PRINT);
+        //echo "<br>";
+        //echo json_encode($result, JSON_PRETTY_PRINT);
 
         View::render('game_setup');
     }
@@ -54,14 +54,14 @@ class PlayerController
 
         if (!$this->validateSize($playerId)) {
             $result['msg'] = 'Invalid player id';
-            echo json_encode($result, JSON_PRETTY_PRINT);
+            //echo json_encode($result, JSON_PRETTY_PRINT);
             return $result;
         }
 
         $service = new PlayerService();
         $result = $service->getPlayer($playerId);
 
-        echo json_encode($result, JSON_PRETTY_PRINT);
+        //echo json_encode($result, JSON_PRETTY_PRINT);
         return $result;
     }
 
@@ -70,7 +70,7 @@ class PlayerController
         $service = new PlayerService();
         $result = $service->getAllPlayers();
 
-        echo json_encode($result, JSON_PRETTY_PRINT);
+        //echo json_encode($result, JSON_PRETTY_PRINT);
     }
 
     private function whereTo($whereTo){
@@ -163,8 +163,28 @@ class PlayerController
         }
     }
 
+    private function scan(){
+        $slot = new SlotController();
+
+        $field = new FieldController();
+        $result = $field->getById($_COOKIE['MyFieldId']);
+
+        $field_elements = $result['field'];
+        $x = $field_elements['Width'];
+        $y = $field_elements['Length'];
+
+        for($i = 1; $i <= $x; $i++){
+            for($k = 1; $k <= $y; $k++){
+                $slot->setRadar($i, $k);
+            }
+        }
+    }
+
     /////////////////////////////////////////////////////////////////////////////////
     public function move(){
+        $this->scan();
+
+        $slot = new SlotController();
         $service = new PlayerService();
 
         $whereTo = $this->whereTo($_POST['Input']);
@@ -178,16 +198,28 @@ class PlayerController
             return $result;
         }
 
+        $result = $service->move($whereTo, $whichPlayer);
+        $slot->find();
+
         if($this->validateWin($whereTo['pos'], $whereTo['axis']) == 1){
             $result['msg'] = 'You won.';
+
+            $slot->removeSlots();
+            echo json_encode($result, JSON_PRETTY_PRINT);
+            return $result;
+        }
+
+        if($this->isDead() == 1){
+            $result['msg'] = 'YOU DIED.';
+            $slot->removeSlots();
 
             echo json_encode($result, JSON_PRETTY_PRINT);
             return $result;
         }
 
-        $result = $service->move($whereTo, $whichPlayer);
+        $slot->emptyBomb();
 
-        echo json_encode($result, JSON_PRETTY_PRINT);
+        //echo json_encode($result, JSON_PRETTY_PRINT);
         View::render('game');
     }
 
@@ -197,6 +229,37 @@ class PlayerController
         $whichPlayer = $_COOKIE['MyPlayerId'];
 
         $service->endGame($whichPlayer);
+    }
+
+    private function applyDamage(){
+        $service = new PlayerService();
+
+        $player = new PlayerController();
+        $array = $player->getById($_COOKIE['MyPlayerId']);
+        $elements = $array['player'];
+        $health = $elements['Health'];
+        $x = $elements['X'];
+        $y = $elements['Y'];
+
+        $slot = new SlotController();
+        $damageSlot = $slot->getDamageByFieldXY($_COOKIE['MyFieldId'], $x, $y);
+        $damage = $damageSlot['Damage'];
+        var_dump($damage);
+        var_dump($health);
+        $service->applyDamage($_COOKIE['MyPlayerId'], $damage, $health);
+
+    }
+
+    private function isDead(){
+        $player = new PlayerController();
+        $array = $player->getById($_COOKIE['MyPlayerId']);
+        $elements = $array['player'];
+        $health = $elements['Health'];
+
+        if($health == 0){
+            return 1;
+        }
+        return 0;
     }
 
 }
