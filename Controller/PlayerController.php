@@ -31,7 +31,6 @@ class PlayerController
         {
             $result['msg'] = 'Invalid player parameters';
 
-            //echo json_encode($result, JSON_PRETTY_PRINT);
             return $result;
         }
 
@@ -92,11 +91,11 @@ class PlayerController
                 break;
             case "left":
                 $result['axis'] = 'Y';
-                $result['pos'] = $y + 1;
+                $result['pos'] = $y - 1;
                 break;
             case "right":
                 $result['axis'] = 'Y';
-                $result['pos'] = $y - 1;
+                $result['pos'] = $y + 1;
                 break;
         }
 
@@ -110,7 +109,7 @@ class PlayerController
     private function validateXAxis($x){
         $field = new FieldController();
         $result = $field->getById($_COOKIE['MyFieldId']);
-        //var_dump($field_elements);
+
         $field_elements = $result['field'];
         $field_width = $field_elements['Width'];
 
@@ -180,7 +179,6 @@ class PlayerController
         }
     }
 
-    /////////////////////////////////////////////////////////////////////////////////
     public function move(){
         $this->scan();
 
@@ -209,6 +207,8 @@ class PlayerController
             return $result;
         }
 
+        $this->applyDamage();
+
         if($this->isDead() == 1){
             $result['msg'] = 'YOU DIED.';
             $slot->removeSlots();
@@ -219,7 +219,6 @@ class PlayerController
 
         $slot->emptyBomb();
 
-        //echo json_encode($result, JSON_PRETTY_PRINT);
         View::render('game');
     }
 
@@ -244,10 +243,30 @@ class PlayerController
         $slot = new SlotController();
         $damageSlot = $slot->getDamageByFieldXY($_COOKIE['MyFieldId'], $x, $y);
         $damage = $damageSlot['Damage'];
-        var_dump($damage);
-        var_dump($health);
-        $service->applyDamage($_COOKIE['MyPlayerId'], $damage, $health);
 
+        $this->addItem($damage);
+
+        $service->applyDamage($_COOKIE['MyPlayerId'], $damage, $health);
+    }
+
+    private function addItem($damage){
+        $slot = new ItemController();
+        if($damage == 0){
+            $random1 = mt_rand(1, 100);
+            $random2 = mt_rand(1, 30);
+            if($random1 < 13){
+                if($random2 < 30){
+                    $name = "small_health";
+                }
+                if($random2 < 15){
+                    $name = "big_health";
+                }
+                if($random2 == 30 || $random2 == 20 || $random2 == 10){
+                    $name = "radar";
+                }
+                $slot->add($name);
+            }
+        }
     }
 
     private function isDead(){

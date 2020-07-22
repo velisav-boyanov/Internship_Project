@@ -9,12 +9,11 @@ class ItemController
 {
     const MinSize = 0;
 
-    public function add()
+    public function add($Name)
     {
         $result = [
             'success' => false
         ];
-        $Name = $_POST['Name'] ?? '';
         $Player_Id = $_COOKIE['MyPlayerId'] ?? '';
         $Field_Id = $_COOKIE['MyFieldId'] ?? '';
 
@@ -30,11 +29,8 @@ class ItemController
         }
 
         $service = new ItemService();
-        $result = $service->saveItem($Name, $Field_Id, $Player_Id);
+        $service->saveItem($Name, $Player_Id, $Field_Id);
 
-        echo json_encode($result, JSON_PRETTY_PRINT);
-
-        //View::render('game_setup');
     }
 
     public function getById()
