@@ -97,6 +97,54 @@ class PlayerController
                 $result['axis'] = 'Y';
                 $result['pos'] = $y + 1;
                 break;
+            case "q":
+                $player = new PlayerController();
+                $array = $player->getById($_COOKIE['MyPlayerId']);
+                $elements = $array['player'];
+                $health = $elements['Health'];
+
+                $item = new ItemController();
+                $service = new PlayerService();
+
+                $damage = 0;
+                $item->getSlotByFieldAndPlayerId("small_health");
+
+                if(!isset($item['msg'])){
+                    $item->useItem("small_health");
+                    $damage = -1;
+                }
+
+                $service->applyDamage($_COOKIE['MyPlayerId'], $damage, $health);
+
+                $result['axis'] = 'Y';
+                $result['pos'] = $y;
+                break;
+            case "e":
+                $player = new PlayerController();
+                $array = $player->getById($_COOKIE['MyPlayerId']);
+                $elements = $array['player'];
+                $health = $elements['Health'];
+
+                $item = new ItemController();
+                $service = new PlayerService();
+
+                $damage = 0;
+                $item->getSlotByFieldAndPlayerId("small_health");
+
+                if(!isset($item['msg'])){
+                    $item->useItem("small_health");
+                    $damage = -2;
+                }
+
+                $service->applyDamage($_COOKIE['MyPlayerId'], $damage, $health);
+
+                $result['axis'] = 'Y';
+                $result['pos'] = $y;
+                break;
+            default:
+                $result['axis'] = 'Y';
+                $result['pos'] = $y;
+                break;
         }
 
         return $result;

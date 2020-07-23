@@ -64,4 +64,28 @@ class ItemController
     private function validateSize($size){
         return $size > self::MinSize;
     }
+
+    public function getSlotByFieldAndPlayerId($name)
+    {
+        $service = new ItemService();
+
+        $fieldId = $_COOKIE['MyFieldId'];
+        $playerId = $_COOKIE['MyPlayerId'];
+
+        $result = $service->getSlotByFieldAndPlayerId($fieldId, $playerId, $name);
+
+        return $result;
+    }
+
+    public function useItem($name)
+    {
+        $service = new ItemService();
+
+        $fieldId = $_COOKIE['MyFieldId'];
+        $playerId = $_COOKIE['MyPlayerId'];
+
+        $result = $service->useItem($fieldId, $playerId, $name);
+
+        return $result;
+    }
 }
