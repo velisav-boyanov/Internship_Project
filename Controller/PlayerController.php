@@ -239,7 +239,6 @@ class PlayerController
         }
 
         $result = $service->move($whereTo, $whichPlayer);
-        $slot->find();
 
         if($this->validateWin($whereTo['pos'], $whereTo['axis']) == 1){
             $result['msg'] = 'You won.';
@@ -260,6 +259,7 @@ class PlayerController
         }
 
         $slot->emptyBomb();
+        $slot->find();
 
         View::render('game');
     }
@@ -292,21 +292,29 @@ class PlayerController
     }
 
     private function addItem($damage){
+        $player = new PlayerController();
+        $playerInfo = $player->getById($_COOKIE['MyPlayerId']);
+
         $slot = new ItemController();
-        if($damage == 0){
-            $random1 = mt_rand(1, 100);
-            $random2 = mt_rand(1, 30);
-            if($random1 < self::itemChance){
-                if($random2 < 30){
-                    $name = "small_health";
+        $item = new SlotController();
+        $result = $item->getDamageByFieldXY($_COOKIE['MyFieldId'], $playerInfo['player']['X'], $playerInfo['player']['Y']);
+
+        if($result['Found'] == 0) {
+            if ($damage == 0) {
+                $random1 = mt_rand(1, 100);
+                $random2 = mt_rand(1, 30);
+                if ($random1 < self::itemChance) {
+                    if ($random2 < 30) {
+                        $name = "small_health";
+                    }
+                    if ($random2 < 15) {
+                        $name = "big_health";
+                    }
+                    if ($random2 == 30 || $random2 == 20 || $random2 == 10) {
+                        $name = "radar";
+                    }
+                    $slot->add($name);
                 }
-                if($random2 < 15){
-                    $name = "big_health";
-                }
-                if($random2 == 30 || $random2 == 20 || $random2 == 10){
-                    $name = "radar";
-                }
-                $slot->add($name);
             }
         }
     }

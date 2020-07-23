@@ -107,8 +107,8 @@ class SlotController
         $length = $elements['Length'];
         $slot = new SlotController();
 
-        for($i = 1; $i < $width; $i++){
-            for($k = 1; $k < $length; $k++){
+        for($i = 1; $i < $width+1; $i++){
+            for($k = 1; $k < $length+1; $k++){
                 $thisSlot = $slot->getDamageByFieldXY($_COOKIE['MyFieldId'], $i, $k);
 
                 $slotId = $thisSlot['Slot_Id'];
