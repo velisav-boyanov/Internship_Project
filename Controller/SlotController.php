@@ -98,6 +98,27 @@ class SlotController
         $service->find($slotId);
     }
 
+    public function findAll(){
+        $field = new FieldController();
+
+        $array = $field->getById($_COOKIE['MyFieldId']);
+        $elements = $array['field'];
+        $width = $elements['Width'];
+        $length = $elements['Length'];
+        $slot = new SlotController();
+
+        for($i = 1; $i < $width; $i++){
+            for($k = 1; $k < $length; $k++){
+                $thisSlot = $slot->getDamageByFieldXY($_COOKIE['MyFieldId'], $i, $k);
+
+                $slotId = $thisSlot['Slot_Id'];
+
+                $service = new SlotService();
+                $service->find($slotId);
+            }
+        }
+    }
+
     public function emptyBomb()
     {
         $player = new PlayerController();

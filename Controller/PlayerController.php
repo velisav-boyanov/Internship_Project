@@ -10,7 +10,7 @@ class PlayerController
 {
     const MaxPlayerHealth = 4;
     const MinSize = 0;
-    const itemChance = 13;
+    const itemChance = 100;
 
     public function add()
     {
@@ -91,14 +91,25 @@ class PlayerController
                 $result['pos'] = $y + 1;
                 break;
             case "q":
-                $player->useItem(-1);
+                $player->useItem(-1, 1);
                 $result['axis'] = 'Y';
                 $result['pos'] = $y;
                 break;
             case "e":
-                $player->useItem(-2);
+                $player->useItem(-2, 0);
                 $result['axis'] = 'Y';
                 $result['pos'] = $y;
+                break;
+            case "r":
+                $slot = new SlotController();
+                $slot->findAll();
+
+                $result['axis'] = 'Y';
+                $result['pos'] = $y;
+
+                $item = new ItemController();
+                $item->useItem("radar");
+
                 break;
             default:
                 $result['axis'] = 'Y';
@@ -109,7 +120,7 @@ class PlayerController
         return $result;
     }
 
-    private function useItem($stat){
+    private function useItem($stat, $small){
         $player = new PlayerController();
         $array = $player->getById($_COOKIE['MyPlayerId']);
         $elements = $array['player'];
@@ -122,7 +133,11 @@ class PlayerController
         $result = $item->getSlotByFieldAndPlayerId("small_health");
 
         if($result['msg'] == 1){
-            $item->useItem("small_health");
+            if($small == 1) {
+                $item->useItem("small_health");
+            }elseif($small == 0) {
+                $item->useItem("big_health");
+            }
             $damage = $stat;
         }
 
