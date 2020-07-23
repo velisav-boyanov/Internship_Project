@@ -10,6 +10,7 @@ class PlayerController
 {
     const MaxPlayerHealth = 4;
     const MinSize = 0;
+    const itemChance = 13;
 
     public function add()
     {
@@ -37,9 +38,6 @@ class PlayerController
         $service = new PlayerService();
         $result = $service->savePlayer($X, $Y, $Field_Id, $Health);
 
-        //echo "<br>";
-        //echo json_encode($result, JSON_PRETTY_PRINT);
-
         View::render('game_setup');
     }
 
@@ -49,18 +47,14 @@ class PlayerController
             'success' => false
         ];
 
-        //$playerId = $_POST['playerId'] ?? '0';
-
         if (!$this->validateSize($playerId)) {
             $result['msg'] = 'Invalid player id';
-            //echo json_encode($result, JSON_PRETTY_PRINT);
             return $result;
         }
 
         $service = new PlayerService();
         $result = $service->getPlayer($playerId);
 
-        //echo json_encode($result, JSON_PRETTY_PRINT);
         return $result;
     }
 
@@ -69,7 +63,6 @@ class PlayerController
         $service = new PlayerService();
         $result = $service->getAllPlayers();
 
-        //echo json_encode($result, JSON_PRETTY_PRINT);
     }
 
     private function whereTo($whereTo){
@@ -98,46 +91,12 @@ class PlayerController
                 $result['pos'] = $y + 1;
                 break;
             case "q":
-                $player = new PlayerController();
-                $array = $player->getById($_COOKIE['MyPlayerId']);
-                $elements = $array['player'];
-                $health = $elements['Health'];
-
-                $item = new ItemController();
-                $service = new PlayerService();
-
-                $damage = 0;
-                $item->getSlotByFieldAndPlayerId("small_health");
-
-                if(!isset($item['msg'])){
-                    $item->useItem("small_health");
-                    $damage = -1;
-                }
-
-                $service->applyDamage($_COOKIE['MyPlayerId'], $damage, $health);
-
+                $player->useItem(-1);
                 $result['axis'] = 'Y';
                 $result['pos'] = $y;
                 break;
             case "e":
-                $player = new PlayerController();
-                $array = $player->getById($_COOKIE['MyPlayerId']);
-                $elements = $array['player'];
-                $health = $elements['Health'];
-
-                $item = new ItemController();
-                $service = new PlayerService();
-
-                $damage = 0;
-                $item->getSlotByFieldAndPlayerId("small_health");
-
-                if(!isset($item['msg'])){
-                    $item->useItem("small_health");
-                    $damage = -2;
-                }
-
-                $service->applyDamage($_COOKIE['MyPlayerId'], $damage, $health);
-
+                $player->useItem(-2);
                 $result['axis'] = 'Y';
                 $result['pos'] = $y;
                 break;
@@ -148,6 +107,26 @@ class PlayerController
         }
 
         return $result;
+    }
+
+    private function useItem($stat){
+        $player = new PlayerController();
+        $array = $player->getById($_COOKIE['MyPlayerId']);
+        $elements = $array['player'];
+        $health = $elements['Health'];
+
+        $item = new ItemController();
+        $service = new PlayerService();
+
+        $damage = 0;
+        $result = $item->getSlotByFieldAndPlayerId("small_health");
+
+        if($result['msg'] == 1){
+            $item->useItem("small_health");
+            $damage = $stat;
+        }
+
+        $service->applyDamage($_COOKIE['MyPlayerId'], $damage, $health);
     }
 
     private function validateSize($size){
@@ -302,7 +281,7 @@ class PlayerController
         if($damage == 0){
             $random1 = mt_rand(1, 100);
             $random2 = mt_rand(1, 30);
-            if($random1 < 13){
+            if($random1 < self::itemChance){
                 if($random2 < 30){
                     $name = "small_health";
                 }

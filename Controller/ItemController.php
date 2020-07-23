@@ -84,8 +84,6 @@ class ItemController
         $fieldId = $_COOKIE['MyFieldId'];
         $playerId = $_COOKIE['MyPlayerId'];
 
-        $result = $service->useItem($fieldId, $playerId, $name);
-
-        return $result;
+        $service->useItem($fieldId, $playerId, $name);
     }
 }

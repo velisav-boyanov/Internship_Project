@@ -69,6 +69,7 @@ class ItemService
         $repo = new ItemRepository();
         $item = $repo->getSlotByFieldAndPlayerId($fieldId, $playerId, $name);
 
+        $result['msg'] = 1;
         if (!$item) {
             $result['msg'] = 'No such item exists.';
             return $result;
@@ -80,13 +81,7 @@ class ItemService
     public function useItem($fieldId, $playerId, $name)
     {
         $repo = new ItemRepository();
-        $item = $repo->useItem($fieldId, $playerId, $name);
+        $repo->useItem($fieldId, $playerId, $name);
 
-        if (!$item) {
-            $result['msg'] = 'No such item exists.';
-            return $result;
-        }
-        $result['item'] = $item;
-        return $result;
     }
 }
