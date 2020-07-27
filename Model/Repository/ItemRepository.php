@@ -5,7 +5,7 @@ namespace Model\Repository;
 
 class ItemRepository
 {
-    public function saveItem($ItemToInsert)
+    public function saveItem($itemToInsert)
     {
         $pdo = DBManager::getInstance()->getConnection();
 
@@ -13,7 +13,7 @@ class ItemRepository
                VALUES (:Name, :Player_Id, :Field_Id)';
 
         $stmt = $pdo->prepare($sql);
-        return $stmt->execute($ItemToInsert);
+        return $stmt->execute($itemToInsert);
     }
 
     public function getItemById($itemId)
