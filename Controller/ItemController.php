@@ -9,17 +9,17 @@ class ItemController
 {
     const MinSize = 0;
 
-    public function add($Name)
+    public function add($name)
     {
         $result = [
             'success' => false
         ];
-        $Player_Id = $_COOKIE['MyPlayerId'] ?? '';
-        $Field_Id = $_COOKIE['MyFieldId'] ?? '';
+        $playerId = $_COOKIE['MyPlayerId'] ?? '';
+        $fieldId = $_COOKIE['MyFieldId'] ?? '';
 
         if(
-            !$this->validateSize($Player_Id)
-            || !$this->validateSize($Field_Id)
+            !$this->validateSize($playerId)
+            || !$this->validateSize($fieldId)
         )
         {
             $result['msg'] = 'Invalid item parameters';
@@ -29,7 +29,7 @@ class ItemController
         }
 
         $service = new ItemService();
-        $service->saveItem($Name, $Player_Id, $Field_Id);
+        $service->saveItem($name, $playerId, $fieldId);
 
     }
 

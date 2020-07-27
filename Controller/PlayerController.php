@@ -10,7 +10,15 @@ class PlayerController
 {
     const MaxPlayerHealth = 4;
     const MinSize = 0;
-    const itemChance = 100;
+    const ItemChance = 15;
+    const SmallHealth = -1;
+    const LargeHealth = -2;
+    const YAxis = 'Y';
+    const XAxis = 'X';
+    const s = "small_health";
+    const l = "big_health";
+    const r = "radar";
+
 
     public function add()
     {
@@ -18,16 +26,16 @@ class PlayerController
             'success' => false
         ];
         $baseYAxis = 1;
-        $X = $_POST['X'] ?? '';
-        $Y = $baseYAxis ?? '';
-        $Health = $_POST['Health'] ?? '';
-        $Field_Id = $_COOKIE['MyFieldId'] ?? '';
+        $x = $_POST['X'] ?? '';
+        $y = $baseYAxis ?? '';
+        $health = $_POST['Health'] ?? '';
+        $fieldId = $_COOKIE['MyFieldId'] ?? '';
 
         if(
-            !$this->validateXAxis($X)
-            || !$this->validateSize($Y)
-            || !$this->validateHealth($Health)
-            || !$this->validateSize($Field_Id)
+            !$this->validateXAxis($x)
+            || !$this->validateSize($y)
+            || !$this->validateHealth($health)
+            || !$this->validateSize($fieldId)
         )
         {
             $result['msg'] = 'Invalid player parameters';
@@ -36,7 +44,7 @@ class PlayerController
         }
 
         $service = new PlayerService();
-        $result = $service->savePlayer($X, $Y, $Field_Id, $Health);
+        $result = $service->savePlayer($x, $y, $fieldId, $health);
 
         View::render('game_setup');
     }
@@ -75,36 +83,36 @@ class PlayerController
         switch ($whereTo) {
             //the map is printed upside down
             case "up":
-                $result['axis'] = 'X';
+                $result['axis'] = self::XAxis;
                 $result['pos'] = $x - 1;
                 break;
             case "down":
-                $result['axis'] = 'X';
+                $result['axis'] = self::XAxis;
                 $result['pos'] = $x + 1;
                 break;
             case "left":
-                $result['axis'] = 'Y';
+                $result['axis'] = self::YAxis;
                 $result['pos'] = $y - 1;
                 break;
             case "right":
-                $result['axis'] = 'Y';
+                $result['axis'] = self::YAxis;
                 $result['pos'] = $y + 1;
                 break;
             case "q":
-                $player->useItem(-1, 1);
-                $result['axis'] = 'Y';
+                $player->useItem(self::SmallHealth, 1);
+                $result['axis'] = self::YAxis;
                 $result['pos'] = $y;
                 break;
             case "e":
-                $player->useItem(-2, 0);
-                $result['axis'] = 'Y';
+                $player->useItem(self::LargeHealth, 0);
+                $result['axis'] = self::YAxis;
                 $result['pos'] = $y;
                 break;
             case "r":
                 $slot = new SlotController();
                 $slot->findAll();
 
-                $result['axis'] = 'Y';
+                $result['axis'] = self::YAxis;
                 $result['pos'] = $y;
 
                 $item = new ItemController();
@@ -112,7 +120,7 @@ class PlayerController
 
                 break;
             default:
-                $result['axis'] = 'Y';
+                $result['axis'] = self::YAxis;
                 $result['pos'] = $y;
                 break;
         }
@@ -130,13 +138,13 @@ class PlayerController
         $service = new PlayerService();
 
         $damage = 0;
-        $result = $item->getSlotByFieldAndPlayerId("small_health");
+        $result = $item->getSlotByFieldAndPlayerId(self::s);
 
-        if($result['msg'] == 1){
+        if($result['success'] == true){
             if($small == 1) {
-                $item->useItem("small_health");
+                $item->useItem(self::s);
             }elseif($small == 0) {
-                $item->useItem("big_health");
+                $item->useItem(self::l);
             }
             $damage = $stat;
         }
@@ -152,10 +160,10 @@ class PlayerController
         $field = new FieldController();
         $result = $field->getById($_COOKIE['MyFieldId']);
 
-        $field_elements = $result['field'];
-        $field_width = $field_elements['Width'];
+        $fieldElements = $result['field'];
+        $fieldWidth = $fieldElements['Width'];
 
-        return $x <= $field_width;
+        return $x <= $fieldWidth;
     }
 
     private function validateHealth($health){
@@ -166,15 +174,15 @@ class PlayerController
         $field = new FieldController();
         $result = $field->getById($_COOKIE['MyFieldId']);
 
-        $field_elements = $result['field'];
-        $field_x = $field_elements['Width'];
-        $field_y = $field_elements['Length'];
+        $fieldElements = $result['field'];
+        $fieldX = $fieldElements['Width'];
+        $fieldY = $fieldElements['Length'];
 
         if($axis == 'X') {
-            return ($pos <= $field_x && $pos > 0);
+            return ($pos <= $fieldX && $pos > 0);
         }
         if($axis == 'Y') {
-            return ($pos <= $field_y && $pos > 0);
+            return ($pos <= $fieldY && $pos > 0);
         }
     }
 
@@ -182,9 +190,9 @@ class PlayerController
         $field = new FieldController();
         $array1 = $field->getById($_COOKIE['MyFieldId']);
 
-        $field_elements = $array1['field'];
-        $field_x = $field_elements['End_X'];
-        $field_y = $field_elements['End_Y'];
+        $fieldElements = $array1['field'];
+        $fieldX = $fieldElements['End_X'];
+        $fieldY = $fieldElements['End_Y'];
 
         $player = new PlayerController();
         $array2 = $player->getById($_COOKIE['MyPlayerId']);
@@ -192,12 +200,12 @@ class PlayerController
         $x = $elements['X'];
         $y = $elements['Y'];
 
-        if(($x == $field_x
+        if(($x == $fieldX
         || ($axis == 'X'
-        && $pos == $field_x))
-        && ($y == $field_y
+        && $pos == $fieldX))
+        && ($y == $fieldY
         || ($axis == 'Y'
-        && $pos == $field_y))){
+        && $pos == $fieldY))){
             $this->endGame();
 
             return 1;
@@ -210,9 +218,9 @@ class PlayerController
         $field = new FieldController();
         $result = $field->getById($_COOKIE['MyFieldId']);
 
-        $field_elements = $result['field'];
-        $x = $field_elements['Width'];
-        $y = $field_elements['Length'];
+        $fieldElements = $result['field'];
+        $x = $fieldElements['Width'];
+        $y = $fieldElements['Length'];
 
         for($i = 1; $i <= $x; $i++){
             for($k = 1; $k <= $y; $k++){
@@ -303,15 +311,15 @@ class PlayerController
             if ($damage == 0) {
                 $random1 = mt_rand(1, 100);
                 $random2 = mt_rand(1, 30);
-                if ($random1 < self::itemChance) {
+                if ($random1 < self::ItemChance) {
                     if ($random2 < 30) {
-                        $name = "small_health";
+                        $name = self::s;
                     }
                     if ($random2 < 15) {
-                        $name = "big_health";
+                        $name = self::l;
                     }
                     if ($random2 == 30 || $random2 == 20 || $random2 == 10) {
-                        $name = "radar";
+                        $name = self::r;
                     }
                     $slot->add($name);
                 }

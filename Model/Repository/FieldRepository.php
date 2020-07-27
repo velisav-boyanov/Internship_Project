@@ -20,7 +20,8 @@ class FieldRepository
    {
        $pdo = DBManager::getInstance()->getConnection();
 
-       $sql = 'SELECT * FROM `Field` WHERE `Field_Id` = :fieldId';
+       $sql = 'SELECT * FROM `Field` 
+               WHERE `Field_Id` = :fieldId';
 
        $stmt = $pdo->prepare($sql);
        $stmt->execute(['fieldId' => $fieldId,]);

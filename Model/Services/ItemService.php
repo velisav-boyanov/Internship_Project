@@ -69,10 +69,12 @@ class ItemService
         $repo = new ItemRepository();
         $item = $repo->getSlotByFieldAndPlayerId($fieldId, $playerId, $name);
 
-        $result['msg'] = 1;
         if (!$item) {
             $result['msg'] = 'No such item exists.';
+            $result['success'] = false;
             return $result;
+        }else{
+            $result['success'] = true;
         }
         $result['item'] = $item;
         return $result;
