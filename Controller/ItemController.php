@@ -9,18 +9,17 @@ class ItemController
 {
     const MinSize = 0;
 
-    public function add()
+    public function add($name)
     {
         $result = [
             'success' => false
         ];
-        $Name = $_POST['Name'] ?? '';
-        $Player_Id = $_COOKIE['MyPlayerId'] ?? '';
-        $Field_Id = $_COOKIE['MyFieldId'] ?? '';
+        $playerId = $_COOKIE['MyPlayerId'] ?? '';
+        $fieldId = $_COOKIE['MyFieldId'] ?? '';
 
         if(
-            !$this->validateSize($Player_Id)
-            || !$this->validateSize($Field_Id)
+            !$this->validateSize($playerId)
+            || !$this->validateSize($fieldId)
         )
         {
             $result['msg'] = 'Invalid item parameters';
@@ -30,11 +29,8 @@ class ItemController
         }
 
         $service = new ItemService();
-        $result = $service->saveItem($Name, $Field_Id, $Player_Id);
+        $service->saveItem($name, $playerId, $fieldId);
 
-        echo json_encode($result, JSON_PRETTY_PRINT);
-
-        //View::render('game_setup');
     }
 
     public function getById()
@@ -67,5 +63,27 @@ class ItemController
 
     private function validateSize($size){
         return $size > self::MinSize;
+    }
+
+    public function getSlotByFieldAndPlayerId($name)
+    {
+        $service = new ItemService();
+
+        $fieldId = $_COOKIE['MyFieldId'];
+        $playerId = $_COOKIE['MyPlayerId'];
+
+        $result = $service->getSlotByFieldAndPlayerId($fieldId, $playerId, $name);
+
+        return $result;
+    }
+
+    public function useItem($name)
+    {
+        $service = new ItemService();
+
+        $fieldId = $_COOKIE['MyFieldId'];
+        $playerId = $_COOKIE['MyPlayerId'];
+
+        $service->useItem($fieldId, $playerId, $name);
     }
 }

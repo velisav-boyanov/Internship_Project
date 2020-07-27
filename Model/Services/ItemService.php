@@ -63,4 +63,27 @@ class ItemService
         $result['item'] = $item;
         return $result;
     }
+
+    public function getSlotByFieldAndPlayerId($fieldId, $playerId, $name)
+    {
+        $repo = new ItemRepository();
+        $item = $repo->getSlotByFieldAndPlayerId($fieldId, $playerId, $name);
+
+        if (!$item) {
+            $result['msg'] = 'No such item exists.';
+            $result['success'] = false;
+            return $result;
+        }else{
+            $result['success'] = true;
+        }
+        $result['item'] = $item;
+        return $result;
+    }
+
+    public function useItem($fieldId, $playerId, $name)
+    {
+        $repo = new ItemRepository();
+        $repo->useItem($fieldId, $playerId, $name);
+
+    }
 }

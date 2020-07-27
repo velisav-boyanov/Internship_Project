@@ -20,7 +20,8 @@ class PlayerRepository
     {
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'SELECT * FROM `Player` WHERE `Player_Id` = :playerId';
+        $sql = 'SELECT * FROM `Player` 
+                WHERE `Player_Id` = :playerId';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['playerId' => $playerId]);
@@ -47,10 +48,14 @@ class PlayerRepository
         $pdo = DBManager::getInstance()->getConnection();
 
         if($axis == 'Y') {
-            $sql = 'UPDATE `Player` SET `Y` = :pos WHERE `Player_id` = :player';
+            $sql = 'UPDATE `Player` 
+                    SET `Y` = :pos 
+                    WHERE `Player_id` = :player';
         }
         if($axis == 'X') {
-            $sql = 'UPDATE `Player` SET `X` = :pos WHERE `Player_id` = :player';
+            $sql = 'UPDATE `Player` 
+                    SET `X` = :pos 
+                    WHERE `Player_id` = :player';
         }
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['pos' => $pos, 'player' => $player]);
@@ -62,7 +67,9 @@ class PlayerRepository
         $win = 1;
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'UPDATE `Player` SET `Finished` = :win WHERE `Player_id` = :player';
+        $sql = 'UPDATE `Player` 
+                SET `Finished` = :win 
+                WHERE `Player_id` = :player';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['win' => $win, 'player' => $player]);
@@ -72,7 +79,9 @@ class PlayerRepository
     {
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'UPDATE `Player` SET `Health` = :life WHERE `Player_id` = :player';
+        $sql = 'UPDATE `Player` 
+                SET `Health` = :life 
+                WHERE `Player_id` = :player';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['life' => $life, 'player' => $player]);

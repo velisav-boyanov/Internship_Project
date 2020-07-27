@@ -29,7 +29,8 @@ class ItemRepository
         return $result;
     }
 
-    public function getAllItems(){
+    public function getAllItems()
+    {
         $pdo = DBManager::getInstance()->getConnection();
 
         $sql = 'SELECT * FROM `Item`';
@@ -39,5 +40,38 @@ class ItemRepository
 
         $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $result;
+    }
+
+    public function getSlotByFieldAndPlayerId($field, $player, $name)
+    {
+        $pdo = DBManager::getInstance()->getConnection();
+
+        $sql = 'SELECT * FROM `Item` 
+                WHERE `Field_Id` = :field 
+                AND `Player_Id` = :player 
+                AND `Name` = :name';
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['field' => $field
+            , 'player' => $player
+            , 'name' => $name]);
+
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $result;
+    }
+
+    public function useItem($field, $player, $name)
+    {
+        $pdo = DBManager::getInstance()->getConnection();
+
+        $sql = 'DELETE FROM `Item` 
+        WHERE `Field_Id` = :field 
+        AND `Player_Id` = :player 
+        AND `Name` = :name LIMIT 1';
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['field' => $field
+            , 'player' => $player
+            , 'name' => $name]);
     }
 }
