@@ -74,4 +74,14 @@ class ItemRepository
             , 'player' => $player
             , 'name' => $name]);
     }
+
+    public function removeItems($id)
+    {
+        $pdo = DBManager::getInstance()->getConnection();
+        $sql = 'DELETE FROM `Item` 
+                WHERE `Field_Id` = :id';
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['id' => $id]);
+    }
 }

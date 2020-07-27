@@ -10,7 +10,7 @@ class PlayerController
 {
     const MaxPlayerHealth = 4;
     const MinSize = 0;
-    const ItemChance = 100;
+    const ItemChance = 15;
     const SmallHealth = -1;
     const LargeHealth = -2;
     const YAxis = 'Y';
@@ -276,6 +276,7 @@ class PlayerController
 
         $slot = new SlotController();
         $service = new PlayerService();
+        $item = new ItemController();
 
         $whereTo = $this->whereTo($_POST['Input']);
         $whichPlayer = $_COOKIE['MyPlayerId'];
@@ -294,6 +295,7 @@ class PlayerController
             $result['msg'] = 'You won.';
 
             $slot->removeSlots();
+            $item->removeItems();
             echo json_encode($result, JSON_PRETTY_PRINT);
             return $result;
         }
@@ -303,7 +305,7 @@ class PlayerController
         if($this->isDead() == 1){
             $result['msg'] = 'YOU DIED.';
             $slot->removeSlots();
-
+            $item->removeItems();
             echo json_encode($result, JSON_PRETTY_PRINT);
             return $result;
         }

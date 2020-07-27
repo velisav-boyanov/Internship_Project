@@ -86,4 +86,9 @@ class ItemService
         $repo->useItem($fieldId, $playerId, $name);
 
     }
+
+    public function removeItems($fieldId){
+        $repo = new ItemRepository();
+        $repo->removeItems($fieldId);
+    }
 }
