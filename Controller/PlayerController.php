@@ -10,7 +10,7 @@ class PlayerController
 {
     const MaxPlayerHealth = 4;
     const MinSize = 0;
-    const ItemChance = 15;
+    const ItemChance = 100;
     const SmallHealth = -1;
     const LargeHealth = -2;
     const YAxis = 'Y';
@@ -355,7 +355,6 @@ class PlayerController
             if ($damage == 0) {
                 $random1 = mt_rand(1, 100);
                 $random2 = mt_rand(1, 30);
-                var_dump($random2);
                 if ($random1 < self::ItemChance) {
                     if ($random2 < 15) {
                         $name = self::s;

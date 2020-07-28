@@ -1,6 +1,7 @@
 <?php
 
 use Controller\FieldController;
+use Controller\ItemController;
 use Controller\PlayerController;
 use Controller\SlotController;
 use Core\View;
@@ -12,9 +13,27 @@ $field_y = $elements1['y'];
 $elements2 = getInfo('MyPlayerId');
 $player_x = $elements2['x'];
 $player_y = $elements2['y'];
-
-//echo $field_y . $field_x . $player_y . $player_x;
+$player_health = $elements2['Health'];
+$player_coins = $elements2['Coins'];
+$item = new ItemController();
+$items = $item->getAll();
+echo "Player health: " . $player_health . ", " . "Player coins: " . $player_coins;
 echo "<br>";
+if(!isset($items['msg'])){
+    $number = $item->getNumberOfItem('small_health');
+    echo "Small potions: " . $number['number']['COUNT(`Item_Id`)'];
+    echo "<br>";
+    $number = $item->getNumberOfItem('big_health');
+    echo "Large potions: " . $number['number']['COUNT(`Item_Id`)'];
+    echo "<br>";
+    $number = $item->getNumberOfItem('radar');
+    echo "Radars: " . $number['number']['COUNT(`Item_Id`)'];
+
+}else{
+    echo $items['msg'];
+}
+echo "<br>" . "<br>";
+
 for($i = 1; $i <= $field_x; $i++){
     for($k = 1; $k <= $field_y; $k++){
         $slot = new SlotController();
@@ -53,6 +72,8 @@ function getInfo($type){
 
         $result['x'] = $elements['X'];
         $result['y'] = $elements['Y'];
+        $result['Health'] = $elements['Health'];
+        $result['Coins'] = $elements['Coins'];
         $result['status'] = "true";
     }elseif($type = 'MyFieldId') {
         $elements = $obj['field'];
@@ -64,7 +85,6 @@ function getInfo($type){
     return $result;
 }
 
-echo "Game go zoom.";
 ?>
 
 <!doctype html>
@@ -82,5 +102,8 @@ echo "Game go zoom.";
         <input type="text" name = "Input" class="form-control" required>
         <button type="submit" class="btn btn-primary"> Move </button>
     </form>
+    <h4>Controls: up, left, right, down;</h4>
+    <h4>q: small health potion, e: large health potion, r: radar;</h4>
+    <h4>bs: buy small health potion, bl: buy large health potion, br: buy radar.</h4>
 </body>
 </html>

@@ -45,14 +45,14 @@ class ItemService
         return $result;
     }
 
-    public function getAllItems()
+    public function getAllItems($playerId)
     {
         $result = [
             'success' => false
         ];
 
         $repo = new ItemRepository();
-        $item = $repo->getAllItems();
+        $item = $repo->getAllItems($playerId);
 
         if (!$item) {
             $result['msg'] = 'There are no items yet!';
@@ -90,5 +90,21 @@ class ItemService
     public function removeItems($fieldId){
         $repo = new ItemRepository();
         $repo->removeItems($fieldId);
+    }
+
+    public function getNumberOfItem($playerId, $name)
+    {
+        $repo = new ItemRepository();
+        $item = $repo->getNumberOfItem($name, $playerId);
+
+        if (!$item) {
+            $result['msg'] = 'No such item exists.';
+            $result['success'] = false;
+            return $result;
+        }else{
+            $result['success'] = true;
+        }
+        $result['number'] = $item;
+        return $result;
     }
 }
