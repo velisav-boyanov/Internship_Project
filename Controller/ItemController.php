@@ -86,4 +86,12 @@ class ItemController
 
         $service->useItem($fieldId, $playerId, $name);
     }
+
+    public function removeItems()
+    {
+        $id = $_COOKIE['MyFieldId'];
+
+        $service = new ItemService();
+        $service->removeItems($id);
+    }
 }

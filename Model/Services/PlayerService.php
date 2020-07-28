@@ -100,4 +100,9 @@ class PlayerService
         }
         $repo->applyDamage($whichPlayer, $life);
     }
+
+    public function alterCoins($num, $id){
+        $repo = new PlayerRepository();
+        $repo->alterCoins($num, $id);
+    }
 }

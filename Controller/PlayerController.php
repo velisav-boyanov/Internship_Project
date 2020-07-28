@@ -18,6 +18,7 @@ class PlayerController
     const s = "small_health";
     const l = "big_health";
     const r = "radar";
+    const c ="coin";
 
 
     public function add()
@@ -119,6 +120,21 @@ class PlayerController
                 $item->useItem("radar");
 
                 break;
+            case "bs":
+                $player->buyItem("bs");
+                $result['axis'] = self::YAxis;
+                $result['pos'] = $y;
+                break;
+            case "bl":
+                $player->buyItem("bl");
+                $result['axis'] = self::YAxis;
+                $result['pos'] = $y;
+                break;
+            case "br":
+                $player->buyItem("br");
+                $result['axis'] = self::YAxis;
+                $result['pos'] = $y;
+                break;
             default:
                 $result['axis'] = self::YAxis;
                 $result['pos'] = $y;
@@ -126,6 +142,32 @@ class PlayerController
         }
 
         return $result;
+    }
+
+    private function buyItem($type){
+        $player = new PlayerController();
+        $info = $player->getById($_COOKIE['MyPlayerId']);
+        $coins = $info['player']['Coins'];
+        $price = 0;
+        switch ($type) {
+            case("bs"):
+                $price = 3;
+                $type = self::s;
+                break;
+            case("bl"):
+                $price = 6;
+                $type = self::l;
+                break;
+            case("radar"):
+                $price = 12;
+                $type = self::r;
+                break;
+        }
+        if($price < $coins){
+            $player->alterCoins($price*(-1));
+            $item = new ItemController();
+            $item->add($type);
+        }
     }
 
     private function useItem($stat, $small){
@@ -178,10 +220,10 @@ class PlayerController
         $fieldX = $fieldElements['Width'];
         $fieldY = $fieldElements['Length'];
 
-        if($axis == 'X') {
+        if($axis == self::XAxis) {
             return ($pos <= $fieldX && $pos > 0);
         }
-        if($axis == 'Y') {
+        if($axis == self::YAxis) {
             return ($pos <= $fieldY && $pos > 0);
         }
     }
@@ -201,10 +243,10 @@ class PlayerController
         $y = $elements['Y'];
 
         if(($x == $fieldX
-        || ($axis == 'X'
+        || ($axis == self::XAxis
         && $pos == $fieldX))
         && ($y == $fieldY
-        || ($axis == 'Y'
+        || ($axis == self::YAxis
         && $pos == $fieldY))){
             $this->endGame();
 
@@ -234,6 +276,7 @@ class PlayerController
 
         $slot = new SlotController();
         $service = new PlayerService();
+        $item = new ItemController();
 
         $whereTo = $this->whereTo($_POST['Input']);
         $whichPlayer = $_COOKIE['MyPlayerId'];
@@ -252,6 +295,7 @@ class PlayerController
             $result['msg'] = 'You won.';
 
             $slot->removeSlots();
+            $item->removeItems();
             echo json_encode($result, JSON_PRETTY_PRINT);
             return $result;
         }
@@ -261,7 +305,7 @@ class PlayerController
         if($this->isDead() == 1){
             $result['msg'] = 'YOU DIED.';
             $slot->removeSlots();
-
+            $item->removeItems();
             echo json_encode($result, JSON_PRETTY_PRINT);
             return $result;
         }
@@ -311,17 +355,22 @@ class PlayerController
             if ($damage == 0) {
                 $random1 = mt_rand(1, 100);
                 $random2 = mt_rand(1, 30);
+                var_dump($random2);
                 if ($random1 < self::ItemChance) {
-                    if ($random2 < 30) {
-                        $name = self::s;
-                    }
                     if ($random2 < 15) {
+                        $name = self::s;
+                        $slot->add($name);
+                    }
+                    if ($random2 < 7) {
                         $name = self::l;
+                        $slot->add($name);
                     }
                     if ($random2 == 30 || $random2 == 20 || $random2 == 10) {
                         $name = self::r;
+                        $slot->add($name);
+                    }if($random2 >= 15) {
+                        $player->alterCoins(1);
                     }
-                    $slot->add($name);
                 }
             }
         }
@@ -337,6 +386,16 @@ class PlayerController
             return 1;
         }
         return 0;
+    }
+
+    private function alterCoins($num){
+        $player = new PlayerController();
+        $array = $player->getById($_COOKIE['MyPlayerId']);
+        $elements = $array['player'];
+        $coins = $elements['Coins'];
+        $num1 = $coins + $num;
+        $player = new PlayerService();
+        $player->alterCoins($num1, $_COOKIE['MyPlayerId']);
     }
 
 }

@@ -86,4 +86,15 @@ class PlayerRepository
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['life' => $life, 'player' => $player]);
     }
+
+    public function alterCoins($num, $id){
+        $pdo = DBManager::getInstance()->getConnection();
+
+        $sql = 'UPDATE `Player`
+                SET `Coins` = :num
+                WHERE `Player_Id` = :id';
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['num' => $num, 'id' => $id]);
+    }
 }
