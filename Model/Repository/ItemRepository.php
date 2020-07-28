@@ -29,14 +29,14 @@ class ItemRepository
         return $result;
     }
 
-    public function getAllItems()
+    public function getAllItems($player)
     {
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'SELECT * FROM `Item`';
+        $sql = 'SELECT * FROM `Item` WHERE `Player_Id` = :player';
 
         $stmt = $pdo->prepare($sql);
-        $stmt->execute();
+        $stmt->execute(['player' => $player]);
 
         $result = $stmt->fetchAll(\PDO::FETCH_ASSOC);
         return $result;
@@ -83,5 +83,18 @@ class ItemRepository
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
+    }
+    public function getNumberOfItem($name, $player) {
+        $pdo = DBManager::getInstance()->getConnection();
+        $sql = 'SELECT COUNT(`Item_Id`) 
+                FROM `Item` 
+                WHERE `Player_Id` = :player 
+                AND `Name` = :name';
+
+        $stmt = $pdo->prepare($sql);
+        $stmt->execute(['name' => $name, 'player' => $player]);
+
+        $result = $stmt->fetch(\PDO::FETCH_ASSOC);
+        return $result;
     }
 }

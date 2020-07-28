@@ -56,9 +56,10 @@ class ItemController
     public function getAll()
     {
         $service = new ItemService();
-        $result = $service->getAllItems();
+        $result = $service->getAllItems($_COOKIE['MyPlayerId']);
 
-        echo json_encode($result, JSON_PRETTY_PRINT);
+        //echo json_encode($result, JSON_PRETTY_PRINT);
+        return $result;
     }
 
     private function validateSize($size){
@@ -93,5 +94,15 @@ class ItemController
 
         $service = new ItemService();
         $service->removeItems($id);
+    }
+
+    public function getNumberOfItem($name){
+        $service = new ItemService();
+
+        $playerId = $_COOKIE['MyPlayerId'];
+
+        $result = $service->getNumberOfItem($playerId, $name);
+
+        return $result;
     }
 }
