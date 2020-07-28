@@ -28,7 +28,6 @@ class PlayerService
         }
         //COOKIE
         $cookie_name = 'MyPlayerId';
-        var_dump($playerId);
         $date = time() + (60*60*24*7*2);
         setcookie($cookie_name, $playerId, $date);
 

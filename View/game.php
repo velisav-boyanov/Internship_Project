@@ -13,6 +13,10 @@ $field_y = $elements1['y'];
 $elements2 = getInfo('MyPlayerId');
 $player_x = $elements2['x'];
 $player_y = $elements2['y'];
+
+$slot = new SlotController();
+$slot->firstFind($player_x, $player_y);
+
 $player_health = $elements2['Health'];
 $player_coins = $elements2['Coins'];
 $item = new ItemController();
