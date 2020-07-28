@@ -7,7 +7,7 @@ use Model\Services\SlotService;
 
 class SlotController
 {
-    const MinSize = 0;
+    const MIN_SIZE = 0;
 
     public function add($X, $Y, $Damage)
     {
@@ -64,11 +64,11 @@ class SlotController
     }
 
     private function validateSize($size){
-        return $size > self::MinSize;
+        return $size > self::MIN_SIZE;
     }
 
     private function validateDamage($size){
-        return $size >= self::MinSize;
+        return $size >= self::MIN_SIZE;
     }
 
     public function getDamageByFieldXY($fieldId, $x, $y)

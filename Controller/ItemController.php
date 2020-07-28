@@ -7,7 +7,7 @@ use Core\View;
 
 class ItemController
 {
-    const MinSize = 0;
+    const MIN_SIZE = 0;
 
     public function add($name)
     {
@@ -63,7 +63,7 @@ class ItemController
     }
 
     private function validateSize($size){
-        return $size > self::MinSize;
+        return $size > self::MIN_SIZE;
     }
 
     public function getSlotByFieldAndPlayerId($name)

@@ -7,9 +7,9 @@ USE Core\View;
 
 class FieldController
 {
-    const MaxSizeForField = 8;
-    const MinSize = 0;
-    const MaxBombIntensity = 1;
+    const MAX_SIZE_FOR_FIELD = 8;
+    const MIN_SIZE = 0;
+    const MAX_BOMB_INTENSITY = 1;
 
     public function add()
     {
@@ -79,7 +79,7 @@ class FieldController
     }
 
     private function validateSize($size){
-        return ($size > self::MinSize && $size <= self::MaxSizeForField);
+        return ($size > self::MIN_SIZE && $size <= self::MAX_SIZE_FOR_FIELD);
     }
 
     private function validatePosition($number, $size){
@@ -87,6 +87,6 @@ class FieldController
     }
 
     private function validateBombIntensity($bombIntensity){
-        return ($bombIntensity > self::MinSize && $bombIntensity < self::MaxBombIntensity);
+        return ($bombIntensity > self::MIN_SIZE && $bombIntensity < self::MAX_BOMB_INTENSITY);
     }
 }

@@ -8,17 +8,17 @@ use Core\View;
 
 class PlayerController
 {
-    const MaxPlayerHealth = 4;
-    const MinSize = 0;
-    const ItemChance = 100;
-    const SmallHealth = -1;
-    const LargeHealth = -2;
-    const YAxis = 'Y';
-    const XAxis = 'X';
-    const s = "small_health";
-    const l = "big_health";
-    const r = "radar";
-    const c ="coin";
+    const MAX_PLAYER_HEALTH = 4;
+    const MIN_SIZE = 0;
+    const ITEM_CHANCE = 100;
+    const SMALL_HEALTH = -1;
+    const LARGE_HEALTH = -2;
+    const Y_AXIS = 'Y';
+    const X_AXIS = 'X';
+    const S = "small_health";
+    const L = "big_health";
+    const R = "radar";
+    const C ="coin";
 
 
     public function add()
@@ -84,36 +84,36 @@ class PlayerController
         switch ($whereTo) {
             //the map is printed upside down
             case "up":
-                $result['axis'] = self::XAxis;
+                $result['axis'] = self::X_AXIS;
                 $result['pos'] = $x - 1;
                 break;
             case "down":
-                $result['axis'] = self::XAxis;
+                $result['axis'] = self::X_AXIS;
                 $result['pos'] = $x + 1;
                 break;
             case "left":
-                $result['axis'] = self::YAxis;
+                $result['axis'] = self::Y_AXIS;
                 $result['pos'] = $y - 1;
                 break;
             case "right":
-                $result['axis'] = self::YAxis;
+                $result['axis'] = self::Y_AXIS;
                 $result['pos'] = $y + 1;
                 break;
             case "q":
-                $player->useItem(self::SmallHealth, 1);
-                $result['axis'] = self::YAxis;
+                $player->useItem(self::SMALL_HEALTH, 1);
+                $result['axis'] = self::Y_AXIS;
                 $result['pos'] = $y;
                 break;
             case "e":
-                $player->useItem(self::LargeHealth, 0);
-                $result['axis'] = self::YAxis;
+                $player->useItem(self::LARGE_HEALTH, 0);
+                $result['axis'] = self::Y_AXIS;
                 $result['pos'] = $y;
                 break;
             case "r":
                 $slot = new SlotController();
                 $slot->findAll();
 
-                $result['axis'] = self::YAxis;
+                $result['axis'] = self::Y_AXIS;
                 $result['pos'] = $y;
 
                 $item = new ItemController();
@@ -122,21 +122,21 @@ class PlayerController
                 break;
             case "bs":
                 $player->buyItem("bs");
-                $result['axis'] = self::YAxis;
+                $result['axis'] = self::Y_AXIS;
                 $result['pos'] = $y;
                 break;
             case "bl":
                 $player->buyItem("bl");
-                $result['axis'] = self::YAxis;
+                $result['axis'] = self::Y_AXIS;
                 $result['pos'] = $y;
                 break;
             case "br":
                 $player->buyItem("br");
-                $result['axis'] = self::YAxis;
+                $result['axis'] = self::Y_AXIS;
                 $result['pos'] = $y;
                 break;
             default:
-                $result['axis'] = self::YAxis;
+                $result['axis'] = self::Y_AXIS;
                 $result['pos'] = $y;
                 break;
         }
@@ -152,15 +152,15 @@ class PlayerController
         switch ($type) {
             case("bs"):
                 $price = 3;
-                $type = self::s;
+                $type = self::S;
                 break;
             case("bl"):
                 $price = 6;
-                $type = self::l;
+                $type = self::L;
                 break;
             case("radar"):
                 $price = 12;
-                $type = self::r;
+                $type = self::R;
                 break;
         }
         if($price <= $coins){
@@ -180,18 +180,18 @@ class PlayerController
         $service = new PlayerService();
 
         if($small == 1) {
-            $result = $item->getSlotByFieldAndPlayerId(self::s);
+            $result = $item->getSlotByFieldAndPlayerId(self::S);
         }
         if($small == 0) {
-            $result = $item->getSlotByFieldAndPlayerId(self::l);
+            $result = $item->getSlotByFieldAndPlayerId(self::L);
         }
         if($result['success'] == true){
             if($small == 1) {
-                $item->useItem(self::s);
+                $item->useItem(self::S);
                 $damage = $stat;
             }
             if($small == 0) {
-                $item->useItem(self::l);
+                $item->useItem(self::L);
                 $damage = $stat;
             }
         }
@@ -200,7 +200,7 @@ class PlayerController
     }
 
     private function validateSize($size){
-        return $size > self::MinSize;
+        return $size > self::MIN_SIZE;
     }
 
     private function validateXAxis($x){
@@ -214,7 +214,7 @@ class PlayerController
     }
 
     private function validateHealth($health){
-        return ($health > self::MinSize && $health <= self::MaxPlayerHealth);
+        return ($health > self::MIN_SIZE && $health <= self::MAX_PLAYER_HEALTH);
     }
 
     private function validatePosition($pos, $axis){
@@ -225,10 +225,10 @@ class PlayerController
         $fieldX = $fieldElements['Width'];
         $fieldY = $fieldElements['Length'];
 
-        if($axis == self::XAxis) {
+        if($axis == self::X_AXIS) {
             return ($pos <= $fieldX && $pos > 0);
         }
-        if($axis == self::YAxis) {
+        if($axis == self::Y_AXIS) {
             return ($pos <= $fieldY && $pos > 0);
         }
     }
@@ -248,10 +248,10 @@ class PlayerController
         $y = $elements['Y'];
 
         if(($x == $fieldX
-        || ($axis == self::XAxis
+        || ($axis == self::X_AXIS
         && $pos == $fieldX))
         && ($y == $fieldY
-        || ($axis == self::YAxis
+        || ($axis == self::Y_AXIS
         && $pos == $fieldY))){
             $this->endGame();
 
@@ -360,15 +360,15 @@ class PlayerController
             if ($damage == 0) {
                 $random1 = mt_rand(1, 100);
                 $random2 = mt_rand(1, 30);
-                if ($random1 < self::ItemChance) {
+                if ($random1 < self::ITEM_CHANCE) {
                     if ($random2 < 15) {
-                        $name = self::s;
+                        $name = self::S;
                     }
                     if ($random2 < 7) {
-                        $name = self::l;
+                        $name = self::L;
                     }
                     if ($random2 == 30 || $random2 == 20 || $random2 == 10) {
-                        $name = self::r;
+                        $name = self::R;
                     }
                     if(isset($name)) {
                         $slot->add($name);
