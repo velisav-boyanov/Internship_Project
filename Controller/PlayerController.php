@@ -163,7 +163,7 @@ class PlayerController
                 $type = self::r;
                 break;
         }
-        if($price < $coins){
+        if($price <= $coins){
             $player->alterCoins($price*(-1));
             $item = new ItemController();
             $item->add($type);
@@ -179,16 +179,21 @@ class PlayerController
         $item = new ItemController();
         $service = new PlayerService();
 
-        $damage = 0;
-        $result = $item->getSlotByFieldAndPlayerId(self::s);
-
+        if($small == 1) {
+            $result = $item->getSlotByFieldAndPlayerId(self::s);
+        }
+        if($small == 0) {
+            $result = $item->getSlotByFieldAndPlayerId(self::l);
+        }
         if($result['success'] == true){
             if($small == 1) {
                 $item->useItem(self::s);
-            }elseif($small == 0) {
-                $item->useItem(self::l);
+                $damage = $stat;
             }
-            $damage = $stat;
+            if($small == 0) {
+                $item->useItem(self::l);
+                $damage = $stat;
+            }
         }
 
         $service->applyDamage($_COOKIE['MyPlayerId'], $damage, $health);
@@ -285,7 +290,7 @@ class PlayerController
         if(!$this->validatePosition($whereTo['pos'], $whereTo['axis'])){
             $result['msg'] = 'Out of bounds.';
 
-            echo json_encode($result, JSON_PRETTY_PRINT);
+            echo $result['msg'];
             return $result;
         }
 
@@ -296,7 +301,7 @@ class PlayerController
 
             $slot->removeSlots();
             $item->removeItems();
-            echo json_encode($result, JSON_PRETTY_PRINT);
+            echo $result['msg'];
             return $result;
         }
 
@@ -306,7 +311,7 @@ class PlayerController
             $result['msg'] = 'YOU DIED.';
             $slot->removeSlots();
             $item->removeItems();
-            echo json_encode($result, JSON_PRETTY_PRINT);
+            echo $result['msg'];
             return $result;
         }
 
@@ -358,16 +363,17 @@ class PlayerController
                 if ($random1 < self::ItemChance) {
                     if ($random2 < 15) {
                         $name = self::s;
-                        $slot->add($name);
                     }
                     if ($random2 < 7) {
                         $name = self::l;
-                        $slot->add($name);
                     }
                     if ($random2 == 30 || $random2 == 20 || $random2 == 10) {
                         $name = self::r;
+                    }
+                    if(isset($name)) {
                         $slot->add($name);
-                    }if($random2 >= 15) {
+                    }
+                    if($random2 >= 15) {
                         $player->alterCoins(1);
                     }
                 }

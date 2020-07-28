@@ -19,7 +19,6 @@ class FieldService
             'End_X' => $End_X,
             'End_Y' => $End_Y
         ];
-        //$fieldId = $repo->saveField($fieldToInsert);
         if($fieldId = $repo->saveField($fieldToInsert))
         {
             $result['success'] = true;
@@ -27,7 +26,6 @@ class FieldService
         }
         //COOKIE
         $cookie_name = 'MyFieldId';
-        var_dump($fieldId);
         $date = time() + (60*60*24*7*2);
         setcookie($cookie_name, $fieldId, $date);
 

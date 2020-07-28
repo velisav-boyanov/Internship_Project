@@ -92,7 +92,18 @@ class SlotController
         $slot = new SlotController();
         $thisSlot = $slot->getDamageByFieldXY($_COOKIE['MyFieldId'], $x, $y);
 
-        $slotId = $thisSlot['Slot_Id'];
+        $slotId = $thisSlot["Slot_Id"];
+
+        $service = new SlotService();
+        $service->find($slotId);
+    }
+
+    public function firstFind($x, $y)
+    {
+        $slot = new SlotController();
+        $thisSlot = $slot->getDamageByFieldXY($_COOKIE['MyFieldId'], $x, $y);
+
+        $slotId = $thisSlot["Slot_Id"];
 
         $service = new SlotService();
         $service->find($slotId);
@@ -184,8 +195,6 @@ class SlotController
             if(!(($new_x < 1 || $new_y < 1) || ($new_x > $width || $new_y > $length))){
                 $newSlot = $slot->getDamageByFieldXY($_COOKIE['MyFieldId'], $new_x, $new_y);
 
-                //var_dump($newSlot['Damage']);
-                //echo "<br>";
                 if($newSlot['Damage'] > 0){
                     $radar++;
                 }
