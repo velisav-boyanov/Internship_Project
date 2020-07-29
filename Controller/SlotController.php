@@ -89,8 +89,7 @@ class SlotController
         $x = $elements['X'];
         $y = $elements['Y'];
 
-        $slot = new SlotController();
-        $thisSlot = $slot->getDamageByFieldXY($_COOKIE['MyFieldId'], $x, $y);
+        $thisSlot = $this->getDamageByFieldXY($_COOKIE['MyFieldId'], $x, $y);
 
         $slotId = $thisSlot["Slot_Id"];
 
@@ -100,10 +99,8 @@ class SlotController
 
     public function firstFind($x, $y)
     {
-        $slot = new SlotController();
-        $thisSlot = $slot->getDamageByFieldXY($_COOKIE['MyFieldId'], $x, $y);
-
-        $slotId = $thisSlot["Slot_Id"];
+        $newSlot = $this->getDamageByFieldXY($_COOKIE['MyFieldId'], $x, $y);
+        $slotId = $newSlot["Slot_Id"];
 
         $service = new SlotService();
         $service->find($slotId);
@@ -116,11 +113,10 @@ class SlotController
         $elements = $array['field'];
         $width = $elements['Width'];
         $length = $elements['Length'];
-        $slot = new SlotController();
 
         for($i = 1; $i < $width+1; $i++){
             for($k = 1; $k < $length+1; $k++){
-                $thisSlot = $slot->getDamageByFieldXY($_COOKIE['MyFieldId'], $i, $k);
+                $thisSlot = $this->getDamageByFieldXY($_COOKIE['MyFieldId'], $i, $k);
 
                 $slotId = $thisSlot['Slot_Id'];
 
@@ -139,8 +135,7 @@ class SlotController
         $x = $elements['X'];
         $y = $elements['Y'];
 
-        $slot = new SlotController();
-        $thisSlot = $slot->getDamageByFieldXY($_COOKIE['MyFieldId'], $x, $y);
+        $thisSlot = $this->getDamageByFieldXY($_COOKIE['MyFieldId'], $x, $y);
 
         $slotId = $thisSlot['Slot_Id'];
 
@@ -157,8 +152,7 @@ class SlotController
     }
 
     public function setRadar($x, $y){
-        $slot = new SlotController();
-        $thisSlot = $slot->getDamageByFieldXY($_COOKIE['MyFieldId'], $x, $y);
+        $thisSlot = $this->getDamageByFieldXY($_COOKIE['MyFieldId'], $x, $y);
 
         $field = new FieldController();
         $result = $field->getById($_COOKIE['MyFieldId']);
@@ -193,7 +187,7 @@ class SlotController
             }
 
             if(!(($new_x < 1 || $new_y < 1) || ($new_x > $width || $new_y > $length))){
-                $newSlot = $slot->getDamageByFieldXY($_COOKIE['MyFieldId'], $new_x, $new_y);
+                $newSlot = $this->getDamageByFieldXY($_COOKIE['MyFieldId'], $new_x, $new_y);
 
                 if($newSlot['Damage'] > 0){
                     $radar++;

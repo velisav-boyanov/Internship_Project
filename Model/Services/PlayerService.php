@@ -7,17 +7,17 @@ use Model\Repository\PlayerRepository;
 
 class PlayerService
 {
-    public function savePlayer($X, $Y, $Field_Id, $Health)
+    public function savePlayer($x, $y, $fieldId, $health)
     {
         $result = ['success' => false];
 
         $repo = new PlayerRepository();
 
         $playerToInsert = [
-            'X' => $X,
-            'Y' => $Y,
-            'Field_Id' => $Field_Id,
-            'Health' => $Health
+            'X' => $x,
+            'Y' => $y,
+            'Field_Id' => $fieldId,
+            'Health' => $health
         ];
 
         //$playerId = $repo->savePlayer($playerToInsert);
@@ -27,9 +27,9 @@ class PlayerService
             $result['msg'] = 'Player successfully added!';
         }
         //COOKIE
-        $cookie_name = 'MyPlayerId';
+        $cookieName = 'MyPlayerId';
         $date = time() + (60*60*24*7*2);
-        setcookie($cookie_name, $playerId, $date);
+        setcookie($cookieName, $playerId, $date);
 
         return $result;
     }

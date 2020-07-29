@@ -6,18 +6,18 @@ use Model\Repository\FieldRepository;
 
 class FieldService
 {
-    public function saveField($Width, $Length, $Bomb_Intensity, $End_X, $End_Y)
+    public function saveField($width, $length, $bombIntensity, $endX, $endY)
     {
         $result = ['success' => false];
 
         $repo = new FieldRepository();
 
         $fieldToInsert = [
-            'Width' => $Width,
-            'Length' => $Length,
-            'Bomb_Intensity' => $Bomb_Intensity,
-            'End_X' => $End_X,
-            'End_Y' => $End_Y
+            'Width' => $width,
+            'Length' => $length,
+            'Bomb_Intensity' => $bombIntensity,
+            'End_X' => $endX,
+            'End_Y' => $endY
         ];
         if($fieldId = $repo->saveField($fieldToInsert))
         {
@@ -25,9 +25,9 @@ class FieldService
             $result['msg'] = 'Field successfully added!';
         }
         //COOKIE
-        $cookie_name = 'MyFieldId';
+        $cookieName = 'MyFieldId';
         $date = time() + (60*60*24*7*2);
-        setcookie($cookie_name, $fieldId, $date);
+        setcookie($cookieName, $fieldId, $date);
 
         return $result;
     }

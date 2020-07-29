@@ -10,15 +10,24 @@ class PlayerController
 {
     const MAX_PLAYER_HEALTH = 4;
     const MIN_SIZE = 0;
-    const ITEM_CHANCE = 100;
+    const ITEM_CHANCE = 20;
     const SMALL_HEALTH = -1;
     const LARGE_HEALTH = -2;
     const Y_AXIS = 'Y';
     const X_AXIS = 'X';
-    const S = "small_health";
-    const L = "big_health";
-    const R = "radar";
-    const C ="coin";
+    const SMALL_HEALTH_STRING = "small_health";
+    const BIG_HEALTH_STRING = "big_health";
+    const RADAR_STRING = "radar";
+    const PRICES = [
+        'RADAR' => 12,
+        'SMALL_POTION' => 3,
+        'BIG_POTION' => 6
+    ];
+    const ITEM_CHANCES = [
+        'SMALL_HEALTH' => 15,
+        'LARGE_HEALTH' => 7,
+        'RADAR' => 3
+    ];
 
 
     public function add()
@@ -45,9 +54,16 @@ class PlayerController
         }
 
         $service = new PlayerService();
-        $result = $service->savePlayer($x, $y, $fieldId, $health);
+        $result1 = $service->savePlayer($x, $y, $fieldId, $health);
 
-        View::render('game_setup');
+        $game = new GameController();
+        $result2 = $game->setUp();
+
+        View::redirect('index.php?target=player&action=loadGame');
+    }
+
+    public function loadGame(){
+        View::render('game');
     }
 
     public function getById($playerId)
@@ -75,8 +91,7 @@ class PlayerController
     }
 
     private function whereTo($whereTo){
-        $player = new PlayerController();
-        $array = $player->getById($_COOKIE['MyPlayerId']);
+        $array = $this->getById($_COOKIE['MyPlayerId']);
         $elements = $array['player'];
         $x = $elements['X'];
         $y = $elements['Y'];
@@ -100,12 +115,12 @@ class PlayerController
                 $result['pos'] = $y + 1;
                 break;
             case "q":
-                $player->useItem(self::SMALL_HEALTH, 1);
+                $this->useItem(self::SMALL_HEALTH, 1);
                 $result['axis'] = self::Y_AXIS;
                 $result['pos'] = $y;
                 break;
             case "e":
-                $player->useItem(self::LARGE_HEALTH, 0);
+                $this->useItem(self::LARGE_HEALTH, 0);
                 $result['axis'] = self::Y_AXIS;
                 $result['pos'] = $y;
                 break;
@@ -117,21 +132,21 @@ class PlayerController
                 $result['pos'] = $y;
 
                 $item = new ItemController();
-                $item->useItem("radar");
+                $item->useItem(self::RADAR_STRING);
 
                 break;
             case "bs":
-                $player->buyItem("bs");
+                $this->buyItem("bs");
                 $result['axis'] = self::Y_AXIS;
                 $result['pos'] = $y;
                 break;
             case "bl":
-                $player->buyItem("bl");
+                $this->buyItem("bl");
                 $result['axis'] = self::Y_AXIS;
                 $result['pos'] = $y;
                 break;
             case "br":
-                $player->buyItem("br");
+                $this->buyItem("br");
                 $result['axis'] = self::Y_AXIS;
                 $result['pos'] = $y;
                 break;
@@ -145,34 +160,32 @@ class PlayerController
     }
 
     private function buyItem($type){
-        $player = new PlayerController();
-        $info = $player->getById($_COOKIE['MyPlayerId']);
+        $info = $this->getById($_COOKIE['MyPlayerId']);
         $coins = $info['player']['Coins'];
         $price = 0;
         switch ($type) {
             case("bs"):
-                $price = 3;
-                $type = self::S;
+                $price = self::PRICES['SMALL_POTION'];
+                $type = self::SMALL_HEALTH_STRING;
                 break;
             case("bl"):
-                $price = 6;
-                $type = self::L;
+                $price = self::PRICES['BIG_POTION'];
+                $type = self::BIG_HEALTH_STRING;
                 break;
             case("radar"):
-                $price = 12;
-                $type = self::R;
+                $price = self::PRICES['RADAR'];
+                $type = self::RADAR_STRING;
                 break;
         }
         if($price <= $coins){
-            $player->alterCoins($price*(-1));
+            $this->alterCoins($price*(-1));
             $item = new ItemController();
             $item->add($type);
         }
     }
 
     private function useItem($stat, $small){
-        $player = new PlayerController();
-        $array = $player->getById($_COOKIE['MyPlayerId']);
+        $array = $this->getById($_COOKIE['MyPlayerId']);
         $elements = $array['player'];
         $health = $elements['Health'];
 
@@ -180,18 +193,18 @@ class PlayerController
         $service = new PlayerService();
 
         if($small == 1) {
-            $result = $item->getSlotByFieldAndPlayerId(self::S);
+            $result = $item->getSlotByFieldAndPlayerId(self::SMALL_HEALTH_STRING);
         }
         if($small == 0) {
-            $result = $item->getSlotByFieldAndPlayerId(self::L);
+            $result = $item->getSlotByFieldAndPlayerId(self::BIG_HEALTH_STRING);
         }
         if($result['success'] == true){
             if($small == 1) {
-                $item->useItem(self::S);
+                $item->useItem(self::SMALL_HEALTH_STRING);
                 $damage = $stat;
             }
             if($small == 0) {
-                $item->useItem(self::L);
+                $item->useItem(self::BIG_HEALTH_STRING);
                 $damage = $stat;
             }
         }
@@ -205,6 +218,8 @@ class PlayerController
 
     private function validateXAxis($x){
         $field = new FieldController();
+        //TODO cookie not set
+
         $result = $field->getById($_COOKIE['MyFieldId']);
 
         $fieldElements = $result['field'];
@@ -241,22 +256,22 @@ class PlayerController
         $fieldX = $fieldElements['End_X'];
         $fieldY = $fieldElements['End_Y'];
 
-        $player = new PlayerController();
-        $array2 = $player->getById($_COOKIE['MyPlayerId']);
+        $array2 = $this->getById($_COOKIE['MyPlayerId']);
         $elements = $array2['player'];
         $x = $elements['X'];
         $y = $elements['Y'];
 
         if(($x == $fieldX
-        || ($axis == self::X_AXIS
-        && $pos == $fieldX))
-        && ($y == $fieldY
-        || ($axis == self::Y_AXIS
-        && $pos == $fieldY))){
-            $this->endGame();
+            || ($axis == self::X_AXIS
+            && $pos == $fieldX))
+            && ($y == $fieldY
+            || ($axis == self::Y_AXIS
+            && $pos == $fieldY))){
+                $this->endGame();
 
-            return 1;
+                return true;
         }
+        return false;
     }
 
     private function scan(){
@@ -296,7 +311,7 @@ class PlayerController
 
         $result = $service->move($whereTo, $whichPlayer);
 
-        if($this->validateWin($whereTo['pos'], $whereTo['axis']) == 1){
+        if($this->validateWin($whereTo['pos'], $whereTo['axis']) == true){
             $result['msg'] = 'You won.';
 
             $slot->removeSlots();
@@ -332,8 +347,7 @@ class PlayerController
     private function applyDamage(){
         $service = new PlayerService();
 
-        $player = new PlayerController();
-        $array = $player->getById($_COOKIE['MyPlayerId']);
+        $array = $this->getById($_COOKIE['MyPlayerId']);
         $elements = $array['player'];
         $health = $elements['Health'];
         $x = $elements['X'];
@@ -349,8 +363,7 @@ class PlayerController
     }
 
     private function addItem($damage){
-        $player = new PlayerController();
-        $playerInfo = $player->getById($_COOKIE['MyPlayerId']);
+        $playerInfo = $this->getById($_COOKIE['MyPlayerId']);
 
         $slot = new ItemController();
         $item = new SlotController();
@@ -361,20 +374,20 @@ class PlayerController
                 $random1 = mt_rand(1, 100);
                 $random2 = mt_rand(1, 30);
                 if ($random1 < self::ITEM_CHANCE) {
-                    if ($random2 < 15) {
-                        $name = self::S;
+                    if ($random2 < self::ITEM_CHANCES['SMALL_HEALTH']) {
+                        $name = self::SMALL_HEALTH_STRING;
                     }
-                    if ($random2 < 7) {
-                        $name = self::L;
+                    if ($random2 < self::ITEM_CHANCES['LARGE_HEALTH']) {
+                        $name = self::BIG_HEALTH_STRING;
                     }
-                    if ($random2 == 30 || $random2 == 20 || $random2 == 10) {
-                        $name = self::R;
+                    if ($random2 < self::ITEM_CHANCES['RADAR']) {
+                        $name = self::RADAR_STRING;
                     }
                     if(isset($name)) {
                         $slot->add($name);
                     }
                     if($random2 >= 15) {
-                        $player->alterCoins(1);
+                        $this->alterCoins(1);
                     }
                 }
             }
@@ -382,8 +395,7 @@ class PlayerController
     }
 
     private function isDead(){
-        $player = new PlayerController();
-        $array = $player->getById($_COOKIE['MyPlayerId']);
+        $array = $this->getById($_COOKIE['MyPlayerId']);
         $elements = $array['player'];
         $health = $elements['Health'];
 
@@ -394,8 +406,7 @@ class PlayerController
     }
 
     private function alterCoins($num){
-        $player = new PlayerController();
-        $array = $player->getById($_COOKIE['MyPlayerId']);
+        $array = $this->getById($_COOKIE['MyPlayerId']);
         $elements = $array['player'];
         $coins = $elements['Coins'];
         $num1 = $coins + $num;

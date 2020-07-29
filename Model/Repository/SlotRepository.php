@@ -19,8 +19,12 @@ class SlotRepository
     {
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'SELECT * FROM `Slot` 
-                WHERE `Slot_Id` = :slotid';
+        $sql = 'SELECT 
+                    * 
+                FROM 
+                    `Slot` 
+                WHERE 
+                    `Slot_Id` = :slotid';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['slotid' => $slotId]);
@@ -33,7 +37,10 @@ class SlotRepository
     {
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'SELECT * FROM `Slot`';
+        $sql = 'SELECT 
+                    * 
+                FROM 
+                    `Slot`';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute();
@@ -46,10 +53,14 @@ class SlotRepository
     {
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'SELECT * FROM `Slot` 
-                WHERE `Field_Id` = :id 
-                AND `X` = :x 
-                AND `Y` = :y';
+        $sql = 'SELECT 
+                    * 
+                FROM 
+                    `Slot` 
+                WHERE 
+                    `Field_Id` = :id 
+                    AND `X` = :x 
+                    AND `Y` = :y';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['x' => $x, 'y' => $y, 'id' => $id]);
@@ -65,9 +76,12 @@ class SlotRepository
 
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'UPDATE `Slot` 
-                SET `Found` = :found 
-                WHERE `Slot_Id` = :id';
+        $sql = 'UPDATE 
+                    `Slot` 
+                SET 
+                    `Found` = :found 
+                WHERE 
+                    `Slot_Id` = :id';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['found' => $found, 'id' => $id]);
@@ -79,9 +93,12 @@ class SlotRepository
 
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'UPDATE `Slot` 
-                SET `Damage` = :damage 
-                WHERE `Slot_Id` = :id';
+        $sql = 'UPDATE 
+                    `Slot` 
+                SET 
+                    `Damage` = :damage 
+                WHERE 
+                    `Slot_Id` = :id';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['damage' => $damage, 'id' => $id]);
@@ -90,8 +107,10 @@ class SlotRepository
     public function removeSlots($id)
     {
         $pdo = DBManager::getInstance()->getConnection();
-        $sql = 'DELETE FROM `Slot` 
-                WHERE `Field_Id` = :id';
+        $sql = 'DELETE FROM 
+                    `Slot` 
+                WHERE 
+                    `Field_Id` = :id';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
@@ -101,9 +120,12 @@ class SlotRepository
     {
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'UPDATE `Slot` 
-                SET `Radar` = :radar 
-                WHERE `Slot_Id` = :id';
+        $sql = 'UPDATE 
+                    `Slot` 
+                SET 
+                    `Radar` = :radar 
+                WHERE 
+                    `Slot_Id` = :id';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['radar' => $radar, 'id' => $id]);

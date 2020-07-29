@@ -33,7 +33,12 @@ class ItemRepository
     {
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'SELECT * FROM `Item` WHERE `Player_Id` = :player';
+        $sql = 'SELECT 
+                    * 
+                FROM 
+                    `Item` 
+                WHERE 
+                    `Player_Id` = :player';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['player' => $player]);
@@ -46,15 +51,19 @@ class ItemRepository
     {
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'SELECT * FROM `Item` 
-                WHERE `Field_Id` = :field 
-                AND `Player_Id` = :player 
-                AND `Name` = :name';
+        $sql = 'SELECT 
+                    * 
+                FROM 
+                    `Item` 
+                WHERE 
+                    `Field_Id` = :field 
+                    AND `Player_Id` = :player 
+                    AND `Name` = :name';
 
         $stmt = $pdo->prepare($sql);
-        $stmt->execute(['field' => $field
-            , 'player' => $player
-            , 'name' => $name]);
+        $stmt->execute(['field' => $field,
+                        'player' => $player,
+                        'name' => $name]);
 
         $result = $stmt->fetch(\PDO::FETCH_ASSOC);
         return $result;
@@ -64,32 +73,39 @@ class ItemRepository
     {
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'DELETE FROM `Item` 
-        WHERE `Field_Id` = :field 
-        AND `Player_Id` = :player 
-        AND `Name` = :name LIMIT 1';
+        $sql = 'DELETE FROM 
+                    `Item` 
+                WHERE 
+                    `Field_Id` = :field 
+                    AND `Player_Id` = :player 
+                    AND `Name` = :name LIMIT 1';
 
         $stmt = $pdo->prepare($sql);
-        $stmt->execute(['field' => $field
-            , 'player' => $player
-            , 'name' => $name]);
+        $stmt->execute(['field' => $field,
+                        'player' => $player,
+                        'name' => $name]);
     }
 
     public function removeItems($id)
     {
         $pdo = DBManager::getInstance()->getConnection();
-        $sql = 'DELETE FROM `Item` 
-                WHERE `Field_Id` = :id';
+        $sql = 'DELETE FROM 
+                    `Item` 
+                WHERE 
+                    `Field_Id` = :id';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['id' => $id]);
     }
     public function getNumberOfItem($name, $player) {
         $pdo = DBManager::getInstance()->getConnection();
-        $sql = 'SELECT COUNT(`Item_Id`) 
-                FROM `Item` 
-                WHERE `Player_Id` = :player 
-                AND `Name` = :name';
+        $sql = 'SELECT 
+                    COUNT(`Item_Id`) 
+                FROM 
+                    `Item` 
+                WHERE 
+                    `Player_Id` = :player 
+                    AND `Name` = :name';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['name' => $name, 'player' => $player]);
