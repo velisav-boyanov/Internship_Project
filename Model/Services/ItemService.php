@@ -6,16 +6,16 @@ use Model\Repository\ItemRepository;
 
 class ItemService
 {
-    public function saveItem($Name, $Player_Id, $Field_Id)
+    public function saveItem($name, $playerId, $fieldId)
     {
         $result = ['success' => false];
 
         $repo = new ItemRepository();
 
         $itemToInsert = [
-            'Player_Id'=> $Player_Id,
-            'Field_Id' => $Field_Id,
-            'Name' => $Name
+            'Player_Id'=> $playerId,
+            'Field_Id' => $fieldId,
+            'Name' => $name
         ];
 
         if($repo->saveItem($itemToInsert))

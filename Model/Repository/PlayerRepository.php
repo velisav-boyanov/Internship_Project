@@ -2,6 +2,8 @@
 
 namespace Model\Repository;
 
+use Controller\PlayerController;
+
 class PlayerRepository
 {
     public function savePlayer($PlayerToInsert)
@@ -47,15 +49,21 @@ class PlayerRepository
     {
         $pdo = DBManager::getInstance()->getConnection();
 
-        if($axis == 'Y') {
-            $sql = 'UPDATE `Player` 
-                    SET `Y` = :pos 
-                    WHERE `Player_id` = :player';
+        if($axis == PlayerController::Y_AXIS) {
+            $sql = 'UPDATE 
+                        `Player` 
+                    SET 
+                        `Y` = :pos 
+                    WHERE 
+                        `Player_id` = :player';
         }
-        if($axis == 'X') {
-            $sql = 'UPDATE `Player` 
-                    SET `X` = :pos 
-                    WHERE `Player_id` = :player';
+        if($axis == PlayerController::X_AXIS) {
+            $sql = 'UPDATE 
+                        `Player` 
+                    SET 
+                        `X` = :pos 
+                    WHERE 
+                        `Player_id` = :player';
         }
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['pos' => $pos, 'player' => $player]);
@@ -67,9 +75,12 @@ class PlayerRepository
         $win = 1;
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'UPDATE `Player` 
-                SET `Finished` = :win 
-                WHERE `Player_id` = :player';
+        $sql = 'UPDATE 
+                    `Player` 
+                SET 
+                    `Finished` = :win 
+                WHERE 
+                    `Player_id` = :player';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['win' => $win, 'player' => $player]);
@@ -79,9 +90,12 @@ class PlayerRepository
     {
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'UPDATE `Player` 
-                SET `Health` = :life 
-                WHERE `Player_id` = :player';
+        $sql = 'UPDATE 
+                    `Player` 
+                SET 
+                    `Health` = :life 
+                WHERE 
+                    `Player_id` = :player';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['life' => $life, 'player' => $player]);
@@ -90,9 +104,12 @@ class PlayerRepository
     public function alterCoins($num, $id){
         $pdo = DBManager::getInstance()->getConnection();
 
-        $sql = 'UPDATE `Player`
-                SET `Coins` = :num
-                WHERE `Player_Id` = :id';
+        $sql = 'UPDATE 
+                    `Player`
+                SET 
+                    `Coins` = :num
+                WHERE 
+                    `Player_Id` = :id';
 
         $stmt = $pdo->prepare($sql);
         $stmt->execute(['num' => $num, 'id' => $id]);

@@ -18,7 +18,7 @@ class View
         }
     }
 
-    //public static function redirect($dest, $statusCode = 301) {
-    //    header('Location: /' . $dest, true, $statusCode);
-    //}
+    public static function redirect($dest, $statusCode = 301) {
+        header('Location: ' . $dest, true, $statusCode);
+    }
 }

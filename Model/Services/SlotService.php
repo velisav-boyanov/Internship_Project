@@ -6,17 +6,17 @@ use Model\Repository\SlotRepository;
 
 class SlotService
 {
-    public function saveSlot($X, $Y, $Field_Id, $Damage)
+    public function saveSlot($x, $y, $fieldId, $damage)
     {
         $result = ['success' => false];
 
         $repo = new SlotRepository();
 
         $slotToInsert = [
-            'X' => $X,
-            'Y' => $Y,
-            'Field_Id' => $Field_Id,
-            'Damage' => $Damage
+            'X' => $x,
+            'Y' => $y,
+            'Field_Id' => $fieldId,
+            'Damage' => $damage
         ];
 
         if($repo->saveSlot($slotToInsert))

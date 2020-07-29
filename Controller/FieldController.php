@@ -17,18 +17,18 @@ class FieldController
             'success' => false
         ];
 
-        $Width = $_POST['Width'] ?? '';
-        $Length = $_POST['Length'] ?? '';
-        $Bomb_Intensity = $_POST['Bomb_Intensity'] ?? '';
-        $End_X = $_POST['End_X'] ?? '';
-        $End_Y = $_POST['End_Y'] ?? '';
+        $width = $_POST['Width'] ?? '';
+        $length = $_POST['Length'] ?? '';
+        $bombIntensity = $_POST['Bomb_Intensity'] ?? '';
+        $endX = $_POST['End_X'] ?? '';
+        $endY = $_POST['End_Y'] ?? '';
 
         if(
-            !$this->validateSize($Length)
-            || !$this->validateSize($Width)
-            || !$this->validatePosition($End_Y, $Length)
-            || !$this->validatePosition($End_X, $Width)
-            || !$this->validateBombIntensity($Bomb_Intensity)
+            !$this->validateSize($length)
+            || !$this->validateSize($width)
+            || !$this->validatePosition($endY, $length)
+            || !$this->validatePosition($endX, $width)
+            || !$this->validateBombIntensity($bombIntensity)
         )
         {
             $result['msg'] = 'Invalid field parameters';
@@ -38,7 +38,7 @@ class FieldController
         }
 
         $service = new FieldService();
-        $result = $service->saveField($Width, $Length, $Bomb_Intensity, $End_X, $End_Y);
+        $result = $service->saveField($width, $length, $bombIntensity, $endX, $endY);
 
         //echo json_encode($result, JSON_PRETTY_PRINT);
 
