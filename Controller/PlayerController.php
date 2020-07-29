@@ -218,8 +218,7 @@ class PlayerController
 
     private function validateXAxis($x){
         $field = new FieldController();
-        //TODO cookie not set
-
+        
         $result = $field->getById($_COOKIE['MyFieldId']);
 
         $fieldElements = $result['field'];
