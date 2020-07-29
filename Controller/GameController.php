@@ -57,6 +57,7 @@ class GameController
         }
         return $result;
     }
+
     //gets the x and y for fields or players
     public function getInfo($type)
     {

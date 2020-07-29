@@ -49,27 +49,41 @@ use Controller\SlotController;
             $fieldX = $elements['x'];
             $fieldY = $elements['y'];
 
+            echo "<table border = '1', bgcolor='#d3d3d3'>";
             for($i = 1; $i <= $fieldX; $i++){
+                echo "<tr>";
                 for($k = 1; $k <= $fieldY; $k++){
                     $slot = new SlotController();
                     $elements = $slot->getDamageByFieldXY($_COOKIE['MyFieldId'], $i, $k);
 
                     if(($k == $playerY) and ($i == $playerX)){
                         if($elements['Found'] == 1) {
-                            echo 'P' . $elements['Radar'];
-                        }else{
-                            echo 'P  ';
+                            if($elements['Radar'] != NULL) {
+                                echo "<td align = center>";
+                                echo '<font color="red">' . $elements['Radar'] . " " . '</font>';
+                                echo "</td>";
+                                //echo 'P' . $elements['Radar'];
+                            }else{
+                                echo "<td align = center>";
+                                echo '<font color="red">' . "# " . '</font>';
+                                echo "</td>";
+                            }
                         }
                     }else{
                         if($elements['Found'] == 1){
+                            echo "<td align = center>";
                             echo $elements['Radar'] . " ";
+                            echo "</td>";
                         }else{
-                            echo '#  ';
+                            echo "<td align = center>";
+                            echo '# ';
+                            echo "</td>";
                         }
                     }
                 }
-                echo "<br>";
+                echo "</tr>";
             }
+            echo "</table>";
         ?>
     </p>
     <form action="index.php?target=player&action=move" method="post">
